@@ -12,4 +12,4 @@ def tau(x, y):
         for j in range(i + 1, n):
             prod = (x[i] - x[j]) * (y[i] - y[j])
             s += (prod > 0) - (prod < 0)
-    return s / (n * (n - 1))
+    return s / (n * (n - 1) / 2)

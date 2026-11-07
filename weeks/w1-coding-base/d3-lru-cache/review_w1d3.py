@@ -14,6 +14,7 @@ class LRU:
     def get(self, k):
         if k not in self.d:
             return None
+        self.d.move_to_end(k)
         return self.d[k]
 
     def put(self, k, v):

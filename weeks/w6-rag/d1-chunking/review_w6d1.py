@@ -9,5 +9,5 @@ def windows(text, size, overlap):
     out, start = [], 0
     while start < len(text):
         out.append((start, min(start + size, len(text))))
-        start += size + overlap
+        start += size - overlap
     return out

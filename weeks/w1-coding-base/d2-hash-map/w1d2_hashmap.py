@@ -19,32 +19,63 @@ class OpenAddressingMap:
         Walk from hash(key) % cap. Stop at an EMPTY slot. Remember the first tombstone
         seen: an insert may reuse it, but the search must continue past it.
         """
-        # TODO
-        raise NotImplementedError
+        i = hash(key) % self.cap
+        first_free = None
+        for _ in range(self.cap):
+            self.probes += 1
+            k = self.keys_[i]
+            if k is _EMPTY:
+                return None, (first_free if first_free is not None else i)
+            if k is _TOMB:
+                if first_free is None:
+                    first_free = i
+            elif k == key:
+                return i, i
+            i = (i + 1) % self.cap
+        return None, first_free
 
     def _resize(self, new_cap: int) -> None:
-        # TODO
-        raise NotImplementedError
+        old = [(k, v) for k, v in zip(self.keys_, self.vals) if k is not _EMPTY and k is not _TOMB]
+        self.cap = new_cap
+        self.keys_ = [_EMPTY] * new_cap
+        self.vals = [None] * new_cap
+        self.live = self.tombs = 0
+        for k, v in old:
+            self.put(k, v)
 
     def put(self, key, value) -> None:
-        # TODO
-        raise NotImplementedError
+        idx, free = self._find(key)
+        if idx is not None:
+            self.vals[idx] = value
+            return
+        if self.keys_[free] is _TOMB:
+            self.tombs -= 1
+        self.keys_[free] = key
+        self.vals[free] = value
+        self.live += 1
+        if (self.live + self.tombs) * 3 > self.cap * 2:
+            self._resize(self.cap * 2)
 
     def get(self, key):
-        # TODO
-        raise NotImplementedError
+        idx, _ = self._find(key)
+        if idx is None:
+            raise KeyError(key)
+        return self.vals[idx]
 
     def delete(self, key) -> None:
-        # TODO
-        raise NotImplementedError
+        idx, _ = self._find(key)
+        if idx is None:
+            raise KeyError(key)
+        self.keys_[idx] = _TOMB
+        self.vals[idx] = None
+        self.live -= 1
+        self.tombs += 1
 
     def __len__(self) -> int:
         return self.live
 
     def __contains__(self, key) -> bool:
-        # TODO
-        raise NotImplementedError
+        return self._find(key)[0] is not None
 
     def keys(self) -> list:
-        # TODO
-        raise NotImplementedError
+        return [k for k in self.keys_ if k is not _EMPTY and k is not _TOMB]

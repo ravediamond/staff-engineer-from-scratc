@@ -19,7 +19,7 @@ class Jobs:
 
     def complete(self, job_id, token):
         j = self.jobs[job_id]
-        if j["done"]:
+        if j["done"] or j["token"] != token or self.clock() >= j["until"]:
             return False
         j["done"] = True
         return True

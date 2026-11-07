@@ -12,7 +12,7 @@ def reduce_scatter(bufs):
     for s in range(N - 1):
         msgs = []
         for i in range(N):
-            c = (i + s) % N
+            c = (i - s) % N
             msgs.append(((i + 1) % N, c, bufs[i][c * size:(c + 1) * size].copy()))
         for dst, c, data in msgs:
             bufs[dst][c * size:(c + 1) * size] += data

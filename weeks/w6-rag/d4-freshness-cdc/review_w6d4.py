@@ -10,4 +10,6 @@ class Index:
         self.docs = {}  # doc_id -> (version, text)
 
     def upsert(self, doc_id, version, text):
-        self.docs[doc_id] = (version, text)
+        cur = self.docs.get(doc_id)
+        if cur is None or version > cur[0]:
+            self.docs[doc_id] = (version, text)

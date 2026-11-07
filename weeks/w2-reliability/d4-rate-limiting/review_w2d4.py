@@ -12,7 +12,7 @@ class Bucket:
 
     def allow(self):
         now = self.clock()
-        self.tokens = self.tokens + (now - self.last) * self.rate
+        self.tokens = min(self.capacity, self.tokens + (now - self.last) * self.rate)
         self.last = now
         if self.tokens >= 1:
             self.tokens -= 1

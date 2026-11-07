@@ -6,4 +6,5 @@ WHY:
 
 
 def panel_score(scores, weights):
-    return sum(weights[a] * scores[a] for a in weights)
+    total = sum(weights.values())
+    return sum(weights[a] * scores[a] for a in weights) / total

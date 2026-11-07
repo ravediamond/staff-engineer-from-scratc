@@ -8,8 +8,7 @@ import math
 
 def mcnemar_chi2(both_pass, a_only, b_only, both_fail):
     """Chi-square statistic with continuity correction for paired pass/fail outcomes."""
-    n = both_pass + a_only + b_only + both_fail
-    return (abs(a_only - b_only) - 1) ** 2 / n
+    return (abs(a_only - b_only) - 1) ** 2 / (a_only + b_only)
 
 
 def p_value(chi2):

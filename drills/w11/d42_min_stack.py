@@ -3,21 +3,16 @@
 
 class MinStack:
     def __init__(self):
-        # TODO
-        raise NotImplementedError
+        self.s = []  # (value, min so far)
 
     def push(self, x) -> None:
-        # TODO
-        raise NotImplementedError
+        self.s.append((x, min(x, self.s[-1][1]) if self.s else x))
 
     def pop(self) -> None:
-        # TODO
-        raise NotImplementedError
+        self.s.pop()
 
     def top(self):
-        # TODO
-        raise NotImplementedError
+        return self.s[-1][0]
 
     def get_min(self):
-        # TODO
-        raise NotImplementedError
+        return self.s[-1][1]

@@ -12,6 +12,7 @@ def minimize(x, fails, shrinker):
         progress = False
         for cand in shrinker(current):
             if fails(cand):
-                progress = False
+                current = cand
+                progress = True
                 break
     return current

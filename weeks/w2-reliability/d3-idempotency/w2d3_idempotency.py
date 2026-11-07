@@ -13,8 +13,8 @@ class KeyConflict(Exception):
 
 def fingerprint(payload: dict) -> str:
     """SHA-256 hex of canonical JSON: sorted keys, separators (',', ':')."""
-    # TODO
-    raise NotImplementedError
+    blob = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode()).hexdigest()
 
 
 class IdempotencyStore:
@@ -25,8 +25,27 @@ class IdempotencyStore:
 
     def execute(self, key: str, payload: dict, fn):
         """Run fn() at most once per (key, payload) within ttl. See README table."""
-        # TODO
-        raise NotImplementedError
+        now = self.clock()
+        fp = fingerprint(payload)
+        rec = self.records.get(key)
+        if rec is not None and now - rec["at"] >= self.ttl:
+            del self.records[key]
+            rec = None
+        if rec is not None:
+            if rec["fp"] != fp:
+                raise KeyConflict(key)
+            if rec["state"] == "in_flight":
+                raise InFlight(key)
+            return rec["result"]
+        self.records[key] = {"fp": fp, "state": "in_flight", "result": None, "at": now}
+        try:
+            self.executions += 1
+            result = fn()
+        except Exception:
+            del self.records[key]
+            raise
+        self.records[key].update(state="completed", result=result, at=self.clock())
+        return result
 
 
 class Ledger:
@@ -37,5 +56,11 @@ class Ledger:
     def transfer(self, key: str, src: str, dst: str, amount: int) -> dict:
         """Move amount from src to dst exactly once per key. ValueError on insufficient funds
         (and the key must stay reusable after that failure). Returns {"src": new_src_balance, "dst": new_dst_balance}."""
-        # TODO
-        raise NotImplementedError
+        def effect():
+            if amount <= 0 or self.balances[src] < amount:
+                raise ValueError("insufficient funds or bad amount")
+            self.balances[src] -= amount
+            self.balances[dst] += amount
+            return {"src": self.balances[src], "dst": self.balances[dst]}
+
+        return self.store.execute(key, {"src": src, "dst": dst, "amount": amount}, effect)

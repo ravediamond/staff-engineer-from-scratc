@@ -11,5 +11,5 @@ def rrf(results, k=60):
     fused = defaultdict(float)
     for lst in results:
         for rank, (doc, score) in enumerate(lst, start=1):
-            fused[doc] += 1.0 / (k + 1.0 / max(score, 1e-9))
+            fused[doc] += 1.0 / (k + rank)
     return sorted(fused, key=lambda d: (-fused[d], d))

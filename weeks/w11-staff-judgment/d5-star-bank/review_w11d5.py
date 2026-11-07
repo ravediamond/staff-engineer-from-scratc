@@ -9,6 +9,8 @@ import re
 def coverage(stories, axes):
     out = {a: [] for a in axes}
     for s in stories:
+        if not re.search(r"\d", s.get("result", "")):
+            continue
         for a in s["signals"]:
             if a in out:
                 out[a].append(s["id"])

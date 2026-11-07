@@ -5,5 +5,13 @@ import heapq
 
 
 def max_capital(k: int, w: int, profits: list, capital: list) -> int:
-    # TODO
-    raise NotImplementedError
+    projects = sorted(zip(capital, profits))
+    avail, i = [], 0
+    for _ in range(k):
+        while i < len(projects) and projects[i][0] <= w:
+            heapq.heappush(avail, -projects[i][1])
+            i += 1
+        if not avail:
+            break
+        w -= heapq.heappop(avail)
+    return w

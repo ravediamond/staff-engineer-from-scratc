@@ -10,5 +10,5 @@ def bon_report(groups, rm_score, heldout_judge):
     total = 0.0
     for cands in groups:
         pick = max(cands, key=rm_score)
-        total += rm_score(pick)
+        total += heldout_judge(pick)
     return total / len(groups)

@@ -2,5 +2,11 @@
 
 
 def can_partition(nums: list) -> bool:
-    # TODO
-    raise NotImplementedError
+    total = sum(nums)
+    if total % 2:
+        return False
+    target = total // 2
+    reach = 1  # bitset of reachable sums
+    for x in nums:
+        reach |= reach << x
+    return bool(reach >> target & 1)

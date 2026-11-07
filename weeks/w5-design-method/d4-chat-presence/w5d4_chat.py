@@ -11,21 +11,25 @@ class ChatService:
     def send(self, conv, sender, client_msg_id, text) -> int:
         """Assign the next seq for conv (1, 2, 3, ...). Duplicate client_msg_id in the same conv returns
         the original seq without storing again. The sender has implicitly read their own message."""
-        # TODO
-        raise NotImplementedError
+        key = (conv, client_msg_id)
+        if key in self.by_client_id:
+            return self.by_client_id[key]
+        seq = len(self.messages[conv]) + 1
+        self.messages[conv].append((seq, sender, text))
+        self.by_client_id[key] = seq
+        self.mark_read(sender, conv, seq)
+        return seq
 
     def fetch(self, conv, after_seq: int = 0, limit: int = 50) -> list:
         """Messages with seq > after_seq, ascending, at most limit."""
-        # TODO
-        raise NotImplementedError
+        return [m for m in self.messages[conv] if m[0] > after_seq][:limit]
 
     def mark_read(self, user, conv, seq: int) -> None:
-        # TODO
-        raise NotImplementedError
+        k = (user, conv)
+        self.read[k] = max(self.read[k], seq)
 
     def unread(self, user, conv) -> int:
-        # TODO
-        raise NotImplementedError
+        return len(self.messages[conv]) - self.read[(user, conv)]
 
 
 class Presence:
@@ -34,14 +38,12 @@ class Presence:
         self.last: dict = {}
 
     def heartbeat(self, user, t: float) -> None:
-        # TODO
-        raise NotImplementedError
+        self.last[user] = max(self.last.get(user, t), t)
 
     def is_online(self, user, now: float) -> bool:
         """Online iff a heartbeat arrived within the last `timeout` seconds (now - last < timeout)."""
-        # TODO
-        raise NotImplementedError
+        t = self.last.get(user)
+        return t is not None and now - t < self.timeout
 
     def online(self, users: list, now: float) -> list:
-        # TODO
-        raise NotImplementedError
+        return [u for u in users if self.is_online(u, now)]

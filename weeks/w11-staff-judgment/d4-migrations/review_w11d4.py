@@ -15,6 +15,6 @@ class Controller:
         self.verified_rate = mismatch_rate
 
     def cutover(self):
-        if self.verified_rate is not None:
+        if self.verified_rate is not None and self.verified_rate <= self.threshold:
             self.reads = "new"
         return self.reads

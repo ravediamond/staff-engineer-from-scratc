@@ -16,5 +16,5 @@ class TimeMap:
     def get(self, key, ts):
         pairs = self.data.get(key, [])
         stamps = [t for t, _ in pairs]
-        i = bisect.bisect_left(stamps, ts)
+        i = bisect.bisect_right(stamps, ts)
         return pairs[i - 1][1] if i else ""

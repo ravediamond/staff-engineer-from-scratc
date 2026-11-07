@@ -17,25 +17,34 @@ class VersionedIndex:
         Upsert: remove the doc's old chunks, add chunks with ids f"{doc_id}@{version}#{i}".
         Delete: remove chunks, store a tombstone {"version": v, "deleted": True}.
         Return True if applied (self.applied += 1)."""
-        # TODO
-        raise NotImplementedError
+        d, v = event["doc_id"], event["version"]
+        cur = self.docs.get(d)
+        if cur is not None and v <= cur["version"]:
+            return False
+        for cid in [c for c, ch in self.chunks.items() if ch["doc_id"] == d]:
+            del self.chunks[cid]
+        if event["op"] == "delete":
+            self.docs[d] = {"version": v, "deleted": True}
+        else:
+            self.docs[d] = {"version": v, "deleted": False}
+            for i, piece in enumerate(self._chunk(event["text"])):
+                self.chunks[f"{d}@{v}#{i}"] = {"doc_id": d, "version": v, "text": piece}
+        self.applied += 1
+        return True
 
     def chunks_for(self, doc_id) -> list:
         """Chunk ids of doc_id, sorted."""
-        # TODO
-        raise NotImplementedError
+        return sorted(c for c, ch in self.chunks.items() if ch["doc_id"] == doc_id)
 
     def live_doc_ids(self) -> list:
-        # TODO
-        raise NotImplementedError
+        return sorted(d for d, s in self.docs.items() if not s["deleted"])
 
     def search(self, term: str) -> list:
         """Sorted doc ids having a chunk containing term (case-insensitive)."""
-        # TODO
-        raise NotImplementedError
+        t = term.lower()
+        return sorted({ch["doc_id"] for ch in self.chunks.values() if t in ch["text"].lower()})
 
     def staleness(self, source_versions: dict) -> list:
         """source_versions: doc_id -> current version at the source. Return sorted doc ids where the index
         has no record or an older version."""
-        # TODO
-        raise NotImplementedError
+        return sorted(d for d, v in source_versions.items() if d not in self.docs or self.docs[d]["version"] < v)

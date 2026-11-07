@@ -8,7 +8,7 @@ WHY:
 def run(model, execute, max_steps):
     steps, trace = 0, []
     while True:
-        if steps > max_steps:
+        if steps >= max_steps:
             return "max_steps", trace
         action = model(trace)
         if "final" in action:

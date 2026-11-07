@@ -7,38 +7,50 @@ class LamportClock:
 
     def tick(self) -> int:
         """Local event. Returns the event's timestamp."""
-        # TODO
-        raise NotImplementedError
+        self.c += 1
+        return self.c
 
     def send(self) -> int:
         """Sending is an event: tick and return the timestamp to attach to the message."""
-        # TODO
-        raise NotImplementedError
+        return self.tick()
 
     def receive(self, ts: int) -> int:
-        # TODO
-        raise NotImplementedError
+        self.c = max(self.c, ts) + 1
+        return self.c
 
 
 def vc_increment(vc: dict, node: str) -> dict:
-    # TODO
-    raise NotImplementedError
+    out = dict(vc)
+    out[node] = out.get(node, 0) + 1
+    return out
 
 
 def vc_merge(a: dict, b: dict) -> dict:
     """Element-wise max."""
-    # TODO
-    raise NotImplementedError
+    return {k: max(a.get(k, 0), b.get(k, 0)) for k in a.keys() | b.keys()}
 
 
 def vc_compare(a: dict, b: dict) -> str:
     """'equal' | 'before' (a happened before b) | 'after' | 'concurrent'."""
-    # TODO
-    raise NotImplementedError
+    ks = a.keys() | b.keys()
+    le = all(a.get(k, 0) <= b.get(k, 0) for k in ks)
+    ge = all(a.get(k, 0) >= b.get(k, 0) for k in ks)
+    if le and ge:
+        return "equal"
+    if le:
+        return "before"
+    if ge:
+        return "after"
+    return "concurrent"
 
 
 def siblings(versions: list) -> list:
     """versions: [(vc, value)]. Keep those not strictly before any other. Keep one of each equal clock.
     Preserve input order among survivors."""
-    # TODO
-    raise NotImplementedError
+    out = []
+    for i, (vc, val) in enumerate(versions):
+        dominated = any(vc_compare(vc, other) == "before" for j, (other, _) in enumerate(versions) if j != i)
+        duplicate = any(vc_compare(vc, kept) == "equal" for kept, _ in out)
+        if not dominated and not duplicate:
+            out.append((vc, val))
+    return out

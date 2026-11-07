@@ -8,5 +8,5 @@ import math
 
 def bm25_term(tf, df, n_docs, doc_len, avgdl, k1=1.5, b=0.75):
     idf = math.log((n_docs - df + 0.5) / (df + 0.5) + 1)
-    norm = k1 * (1 - b + b * avgdl / doc_len)
+    norm = k1 * (1 - b + b * doc_len / avgdl)
     return idf * tf * (k1 + 1) / (tf + norm)

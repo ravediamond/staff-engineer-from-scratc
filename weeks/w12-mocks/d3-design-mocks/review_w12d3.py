@@ -5,4 +5,4 @@ WHY:
 
 
 def monthly_human_cost(tickets_per_day, escalation_rate, usd_per_ticket):
-    return tickets_per_day * escalation_rate * usd_per_ticket
+    return tickets_per_day * 30 * escalation_rate * usd_per_ticket

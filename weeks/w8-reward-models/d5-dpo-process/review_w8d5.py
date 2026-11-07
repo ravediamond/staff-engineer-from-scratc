@@ -8,4 +8,4 @@ from torch import nn
 
 
 def dpo_loss(pi_c, pi_r, ref_c, ref_r, beta=0.1):
-    return -nn.functional.logsigmoid(beta * (pi_c - pi_r)).mean()
+    return -nn.functional.logsigmoid(beta * ((pi_c - ref_c) - (pi_r - ref_r))).mean()

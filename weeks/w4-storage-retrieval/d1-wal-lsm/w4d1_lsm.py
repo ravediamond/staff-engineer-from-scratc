@@ -13,18 +13,27 @@ class WAL:
 
     def append(self, record: dict) -> None:
         """One JSON object per line. Flush (and fsync) before returning."""
-        # TODO
-        raise NotImplementedError
+        with open(self.path, "a") as f:
+            f.write(json.dumps(record) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
 
     def replay(self) -> list:
         """All records in order. A last line that is not valid JSON (torn write) is ignored.
         An invalid line anywhere else raises ValueError (real corruption)."""
-        # TODO
-        raise NotImplementedError
+        lines = self.path.read_text().splitlines()
+        out = []
+        for i, line in enumerate(lines):
+            try:
+                out.append(json.loads(line))
+            except json.JSONDecodeError:
+                if i == len(lines) - 1:
+                    break
+                raise ValueError(f"corrupt WAL line {i}")
+        return out
 
     def truncate(self) -> None:
-        # TODO
-        raise NotImplementedError
+        self.path.write_text("")
 
 
 class LSM:
@@ -42,23 +51,37 @@ class LSM:
 
     def _recover(self) -> None:
         """Load SSTables (newest first) and replay the WAL into the memtable."""
-        # TODO
-        raise NotImplementedError
+        for p in reversed(self._sst_paths()):
+            self.sstables.append(dict(json.loads(p.read_text())))
+        for rec in self.wal.replay():
+            self.memtable[rec["k"]] = rec["v"]
 
     def put(self, key: str, value) -> None:
-        # TODO
-        raise NotImplementedError
+        self.wal.append({"k": key, "v": value})
+        self.memtable[key] = value
+        if len(self.memtable) >= self.limit:
+            self.flush()
 
     def delete(self, key: str) -> None:
-        # TODO
-        raise NotImplementedError
+        self.put(key, TOMBSTONE)
 
     def get(self, key: str, default=None):
-        # TODO
-        raise NotImplementedError
+        for table in [self.memtable, *self.sstables]:
+            if key in table:
+                v = table[key]
+                return default if v == TOMBSTONE else v
+        return default
 
     def flush(self) -> None:
         """Write the memtable as a sorted list of [key, value] to sst-<n>.json, make it the newest SSTable,
         clear the memtable, truncate the WAL. Write the file BEFORE truncating the WAL."""
-        # TODO
-        raise NotImplementedError
+        if not self.memtable:
+            return
+        n = len(self._sst_paths())
+        items = sorted(self.memtable.items())
+        tmp = self.dir / f"sst-{n}.json.tmp"
+        tmp.write_text(json.dumps(items))
+        tmp.rename(self.dir / f"sst-{n}.json")
+        self.sstables.insert(0, dict(items))
+        self.memtable = {}
+        self.wal.truncate()

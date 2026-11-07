@@ -15,4 +15,6 @@ def heavy_hitters(stream, k):
         else:
             for y in list(c):
                 c[y] -= 1
+                if c[y] == 0:
+                    del c[y]
     return c

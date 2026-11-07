@@ -40,15 +40,33 @@ def train_steps(state: dict, n: int) -> list:
 def save_checkpoint(path: str, state: dict) -> None:
     """Save model, optimizer, scheduler, step, and the torch / numpy / python RNG states.
     Atomic: torch.save to path + ".tmp", then os.replace."""
-    # TODO
-    raise NotImplementedError
+    blob = {
+        "model": state["model"].state_dict(),
+        "opt": state["opt"].state_dict(),
+        "sched": state["sched"].state_dict(),
+        "step": state["step"],
+        "rng_torch": torch.get_rng_state(),
+        "rng_numpy": np.random.get_state(),
+        "rng_python": random.getstate(),
+    }
+    tmp = path + ".tmp"
+    torch.save(blob, tmp)
+    os.replace(tmp, path)
 
 
 def load_checkpoint(path: str, seed: int = 0) -> dict:
     """Rebuild a fresh state with build(seed), then restore everything saved (RNGs LAST, after build seeded them).
     torch.load(..., weights_only=False) because the blob contains numpy and python objects."""
-    # TODO
-    raise NotImplementedError
+    state = build(seed)
+    blob = torch.load(path, weights_only=False)
+    state["model"].load_state_dict(blob["model"])
+    state["opt"].load_state_dict(blob["opt"])
+    state["sched"].load_state_dict(blob["sched"])
+    state["step"] = blob["step"]
+    torch.set_rng_state(blob["rng_torch"])
+    np.random.set_state(blob["rng_numpy"])
+    random.setstate(blob["rng_python"])
+    return state
 
 
 def params_vector(state: dict) -> torch.Tensor:

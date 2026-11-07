@@ -9,4 +9,4 @@ import torch
 
 def sync(grads_per_rank: list) -> list:
     total = torch.stack(grads_per_rank).sum(0)
-    return [total.clone() for _ in grads_per_rank]
+    return [total / len(grads_per_rank) for _ in grads_per_rank]

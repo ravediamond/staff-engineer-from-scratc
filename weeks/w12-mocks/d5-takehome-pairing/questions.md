@@ -5,3 +5,8 @@
 3. What did you ship publicly, and which artifact would you show an interviewer first?
 4. What is the plan for the next 4 weeks, and which three companies first?
 
+## What a good retro contains
+
+Evidence over feelings: scores per round from your first attempt to week 12, ship-log links, the gap list
+ranked by how often it costs you in mocks, and a plan with dates. If a week did not move anything, say so
+and say what you would change in the curriculum: open an issue on this repo for yourself.

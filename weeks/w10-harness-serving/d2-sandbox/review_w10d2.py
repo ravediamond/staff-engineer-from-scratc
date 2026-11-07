@@ -9,6 +9,6 @@ import os
 def safe_path(workspace, path):
     ws = os.path.realpath(workspace)
     p = os.path.realpath(os.path.join(ws, path))
-    if not p.startswith(ws):
+    if os.path.commonpath([ws, p]) != ws:
         raise PermissionError(path)
     return p

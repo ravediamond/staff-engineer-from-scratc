@@ -12,8 +12,31 @@ def validate(schema: dict, value, path: str = "$") -> list:
       -> f"{path}.{key}: unexpected"; recurse into known properties (sorted key order for determinism)
     - array: recurse into items with path f"{path}[{i}]"
     Order: type, enum, required (sorted), unexpected (sorted), properties (sorted), items (in order)."""
-    # TODO
-    raise NotImplementedError
+    errs = []
+    t = schema.get("type")
+    if t is not None:
+        py = _TYPES[t]
+        ok = isinstance(value, py) and not (t in ("integer", "number") and isinstance(value, bool))
+        if not ok:
+            return [f"{path}: expected {t}"]
+    if "enum" in schema and value not in schema["enum"]:
+        errs.append(f"{path}: not in enum")
+    if t == "object":
+        props = schema.get("properties", {})
+        for k in sorted(schema.get("required", [])):
+            if k not in value:
+                errs.append(f"{path}.{k}: required")
+        if schema.get("additionalProperties") is False:
+            for k in sorted(value):
+                if k not in props:
+                    errs.append(f"{path}.{k}: unexpected")
+        for k in sorted(props):
+            if k in value:
+                errs += validate(props[k], value[k], f"{path}.{k}")
+    if t == "array" and "items" in schema:
+        for i, item in enumerate(value):
+            errs += validate(schema["items"], item, f"{path}[{i}]")
+    return errs
 
 
 @dataclass
@@ -51,5 +74,32 @@ def run_agent(model, tools: list, task: str, max_steps: int, max_tokens: int) ->
          append {"role": "assistant", "content": action} and {"role": "tool", "content": observation} to messages,
          append {"tool", "args", "observation"} to trace.
     Return {"status", "answer" (None unless done), "steps", "tokens", "trace"}."""
-    # TODO
-    raise NotImplementedError
+    by_name = {t.name: t for t in tools}
+    messages = [{"role": "user", "content": task}]
+    trace, steps, tokens = [], 0, 0
+    while True:
+        if steps == max_steps:
+            return {"status": "max_steps", "answer": None, "steps": steps, "tokens": tokens, "trace": trace}
+        action = model(messages)
+        tokens += action["tokens"]
+        if tokens > max_tokens:
+            return {"status": "budget", "answer": None, "steps": steps, "tokens": tokens, "trace": trace}
+        if "final" in action:
+            return {"status": "done", "answer": action["final"], "steps": steps, "tokens": tokens, "trace": trace}
+        steps += 1
+        name, args = action["tool"], action.get("args", {})
+        tool = by_name.get(name)
+        if tool is None:
+            obs = f"error: unknown tool {name}"
+        else:
+            errors = validate(tool.schema, args)
+            if errors:
+                obs = "error: invalid args: " + "; ".join(errors)
+            else:
+                try:
+                    obs = str(tool.fn(**args))
+                except Exception as e:
+                    obs = f"error: {type(e).__name__}: {e}"
+        messages.append({"role": "assistant", "content": action})
+        messages.append({"role": "tool", "content": obs})
+        trace.append({"tool": name, "args": args, "observation": obs})

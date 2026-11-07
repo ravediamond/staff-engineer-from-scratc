@@ -9,7 +9,7 @@ def bytes_per_param_mixed_adam():
     params_bf16 = 2
     grads_bf16 = 2
     master_fp32 = 4
-    adam_states_fp32 = 4
+    adam_states_fp32 = 8  # m and v, 4 bytes each
     return params_bf16 + grads_bf16 + master_fp32 + adam_states_fp32
 
 

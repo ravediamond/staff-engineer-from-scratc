@@ -17,8 +17,10 @@ class Breaker:
         if self.state == "closed":
             return True
         if self.state == "half_open":
-            self.trials += 1
-            return True
+            if self.trials < self.half_open_max:
+                self.trials += 1
+                return True
+            return False
         return False
 
     def failure(self):

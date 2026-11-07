@@ -11,5 +11,5 @@ def kappa(human, judge):
     po = sum(h == j for h, j in zip(human, judge)) / n
     ch, cj = Counter(human), Counter(judge)
     labels = set(human) | set(judge)
-    pe = sum((ch[l] / n) ** 2 for l in labels)
+    pe = sum((ch[l] / n) * (cj[l] / n) for l in labels)
     return (po - pe) / (1 - pe)

@@ -9,4 +9,4 @@ import statistics
 def cuped_theta(y, x):
     mx, my = statistics.fmean(x), statistics.fmean(y)
     cov = sum((a - mx) * (b - my) for a, b in zip(x, y)) / (len(x) - 1)
-    return cov / statistics.variance(y)
+    return cov / statistics.variance(x)

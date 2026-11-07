@@ -15,6 +15,6 @@ def call_with_retries(fn, retries):
         attempt += 1
         try:
             return fn(), attempt
-        except Exception:
+        except TransientError:
             if attempt > retries:
                 raise

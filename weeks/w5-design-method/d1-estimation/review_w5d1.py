@@ -6,4 +6,4 @@ WHY:
 
 def egress_gbps(peak_qps, avg_response_kb):
     bytes_per_s = peak_qps * avg_response_kb * 1000
-    return bytes_per_s / 1e9
+    return bytes_per_s * 8 / 1e9

@@ -14,5 +14,5 @@ def ece(probs, labels, n_bins=10):
         if b:
             conf = sum(p for p, _ in b) / len(b)
             acc = sum(y for _, y in b) / len(b)
-            gaps.append(abs(acc - conf))
-    return sum(gaps) / len(gaps)
+            gaps.append(len(b) * abs(acc - conf))
+    return sum(gaps) / len(probs)

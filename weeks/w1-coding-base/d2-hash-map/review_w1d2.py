@@ -31,7 +31,7 @@ class TinyMap:
         i = self._start(key)
         while self.slots[i] is not EMPTY:
             if self.slots[i] != "TOMB" and self.slots[i][0] == key:
-                self.slots[i] = EMPTY
+                self.slots[i] = "TOMB"
                 return
             i = (i + 1) % len(self.slots)
         raise KeyError(key)

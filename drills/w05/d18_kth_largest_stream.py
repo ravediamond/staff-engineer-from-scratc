@@ -4,9 +4,14 @@ import heapq
 
 class KthLargest:
     def __init__(self, k: int, nums: list):
-        # TODO
-        raise NotImplementedError
+        self.k = k
+        self.h = []
+        for x in nums:
+            self.add(x)
 
     def add(self, x: int) -> int:
-        # TODO
-        raise NotImplementedError
+        if len(self.h) < self.k:
+            heapq.heappush(self.h, x)
+        elif x > self.h[0]:
+            heapq.heapreplace(self.h, x)
+        return self.h[0]

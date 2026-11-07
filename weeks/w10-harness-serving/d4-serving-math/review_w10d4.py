@@ -6,4 +6,4 @@ WHY:
 
 
 def kv_gb(layers, kv_heads, head_dim, seq_len, batch, dtype_bytes=2):
-    return layers * kv_heads * head_dim * seq_len * batch * dtype_bytes / 1e9
+    return 2 * layers * kv_heads * head_dim * seq_len * batch * dtype_bytes / 1e9

@@ -5,5 +5,7 @@ from collections import defaultdict
 
 
 def group_anagrams(words: list) -> list:
-    # TODO
-    raise NotImplementedError
+    g = defaultdict(list)
+    for w in words:
+        g["".join(sorted(w))].append(w)
+    return sorted(sorted(v) for v in g.values())

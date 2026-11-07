@@ -18,4 +18,4 @@ class Ring:
 
     def lookup(self, key):
         i = bisect.bisect_left(self.hashes, h(key))
-        return self.nodes[i]
+        return self.nodes[i % len(self.nodes)]

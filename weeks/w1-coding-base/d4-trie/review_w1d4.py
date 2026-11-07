@@ -14,9 +14,8 @@ class Trie:
         for i, ch in enumerate(word):
             if ch not in node:
                 node[ch] = {}
-                if i == len(word) - 1:
-                    node[ch]["$"] = True
             node = node[ch]
+        node["$"] = True
 
     def contains(self, word):
         node = self.root

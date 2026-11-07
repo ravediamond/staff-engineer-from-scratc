@@ -4,13 +4,15 @@ O(1) memory in the number of hits per second: use 300 buckets."""
 
 class HitCounter:
     def __init__(self):
-        # TODO
-        raise NotImplementedError
+        self.times = [0] * 300
+        self.counts = [0] * 300
 
     def hit(self, ts: int) -> None:
-        # TODO
-        raise NotImplementedError
+        i = ts % 300
+        if self.times[i] != ts:
+            self.times[i] = ts
+            self.counts[i] = 0
+        self.counts[i] += 1
 
     def get_hits(self, ts: int) -> int:
-        # TODO
-        raise NotImplementedError
+        return sum(c for t, c in zip(self.times, self.counts) if ts - t < 300)

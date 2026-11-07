@@ -7,7 +7,7 @@ TOMB = object()
 
 
 def lsm_get(memtable: dict, sstables_newest_first: list, key):
-    for table in [memtable, *reversed(sstables_newest_first)]:
+    for table in [memtable, *sstables_newest_first]:
         if key in table:
             v = table[key]
             return None if v is TOMB else v

@@ -19,14 +19,12 @@ RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
 
 def is_retryable_status(code: int) -> bool:
-    # TODO
-    raise NotImplementedError
+    return code in RETRYABLE_STATUS
 
 
 def backoff_delay(attempt: int, base: float, cap: float, rng: random.Random) -> float:
     """Full jitter: uniform(0, min(cap, base * 2**attempt)). attempt starts at 0."""
-    # TODO
-    raise NotImplementedError
+    return rng.uniform(0, min(cap, base * (2 ** attempt)))
 
 
 def call_with_retry(fn, *, max_attempts: int, base: float, cap: float, deadline: float,
@@ -40,8 +38,22 @@ def call_with_retry(fn, *, max_attempts: int, base: float, cap: float, deadline:
     - If the deadline has already passed before an attempt: raise DeadlineExceeded without calling fn.
     `deadline` is absolute, in the same units as clock().
     """
-    # TODO
-    raise NotImplementedError
+    last = None
+    for attempt in range(max_attempts):
+        remaining = deadline - clock()
+        if remaining <= 0:
+            raise DeadlineExceeded("no time left") from last
+        try:
+            return fn(remaining)
+        except RetryableError as e:
+            last = e
+            if attempt == max_attempts - 1:
+                raise
+            d = backoff_delay(attempt, base, cap, rng)
+            if clock() + d >= deadline:
+                raise DeadlineExceeded("next retry would miss the deadline") from e
+            sleep(d)
+    raise AssertionError("unreachable")
 
 
 class RetryBudget:
@@ -54,14 +66,19 @@ class RetryBudget:
         self.retries: deque = deque()
 
     def _trim(self, q: deque) -> None:
-        # TODO
-        raise NotImplementedError
+        cutoff = self.clock() - self.window
+        while q and q[0] <= cutoff:
+            q.popleft()
 
     def record_request(self) -> None:
-        # TODO
-        raise NotImplementedError
+        self.requests.append(self.clock())
 
     def try_spend(self) -> bool:
         """True (and record the retry) if a retry is allowed now."""
-        # TODO
-        raise NotImplementedError
+        self._trim(self.requests)
+        self._trim(self.retries)
+        allowed = self.min + self.ratio * len(self.requests)
+        if len(self.retries) + 1 <= allowed:
+            self.retries.append(self.clock())
+            return True
+        return False

@@ -17,4 +17,5 @@ class Storage:
     def write(self, value, token):
         if token < self.highest:
             raise Stale(token)
+        self.highest = token
         self.value = value

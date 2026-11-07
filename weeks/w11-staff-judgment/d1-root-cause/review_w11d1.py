@@ -14,4 +14,4 @@ def first_bad(n, is_bad):
             hi = mid
         else:
             lo = mid
-    return lo
+    return hi

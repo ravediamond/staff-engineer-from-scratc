@@ -6,5 +6,5 @@ WHY:
 
 
 def search(scores, acl, groups, k):
-    top = sorted(scores, key=lambda c: -scores[c])[:k]
-    return [c for c in top if acl[c] & groups]
+    allowed = [c for c in scores if acl[c] & groups]
+    return sorted(allowed, key=lambda c: -scores[c])[:k]

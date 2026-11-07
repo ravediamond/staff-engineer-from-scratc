@@ -2,5 +2,7 @@
 
 
 def rob(nums: list) -> int:
-    # TODO
-    raise NotImplementedError
+    take = skip = 0  # best including / excluding the previous house
+    for x in nums:
+        take, skip = skip + x, max(take, skip)
+    return max(take, skip)

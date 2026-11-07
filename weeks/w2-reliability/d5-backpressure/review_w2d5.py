@@ -8,7 +8,7 @@ import asyncio
 
 async def backfill(n_items: int, maxsize: int) -> int:
     """Fast producer, slow consumer. Returns the peak queue size observed."""
-    q = asyncio.Queue()
+    q = asyncio.Queue(maxsize=maxsize)
     peak = 0
 
     async def consumer():

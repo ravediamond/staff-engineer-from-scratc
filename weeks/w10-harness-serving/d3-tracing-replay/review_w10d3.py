@@ -11,7 +11,9 @@ class Replay:
         self.used = {}
 
     def call(self, name, **args):
-        for rec in self.recording:
-            if rec["tool"] == name:
-                return rec["output"]
-        raise KeyError(name)
+        k = self.used.get(name, 0)
+        matches = [r for r in self.recording if r["tool"] == name]
+        if k >= len(matches) or matches[k]["args"] != args:
+            raise KeyError(f"{name} #{k} with {args} not recorded")
+        self.used[name] = k + 1
+        return matches[k]["output"]

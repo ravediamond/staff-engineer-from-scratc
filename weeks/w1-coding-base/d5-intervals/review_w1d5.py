@@ -6,7 +6,7 @@ WHY:
 
 def merge(intervals):
     """merge([[1,3],[2,6],[8,10]]) == [[1,6],[8,10]]"""
-    intervals = sorted(intervals, key=lambda iv: iv[1])
+    intervals = sorted(intervals, key=lambda iv: iv[0])
     out = []
     for s, e in intervals:
         if out and s <= out[-1][1]:

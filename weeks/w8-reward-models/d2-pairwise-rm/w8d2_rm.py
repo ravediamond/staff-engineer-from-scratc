@@ -27,8 +27,10 @@ def make_preference_data(n_prompts: int = 300, pairs_per_prompt: int = 6, dim: i
 def split_by_prompt(data: list, test_frac: float, seed: int = 0) -> tuple:
     """Shuffle the distinct prompt ids with random.Random(seed), put the first round(test_frac * n_prompts)
     in test. Return (train, test) lists of pairs. No prompt may appear in both."""
-    # TODO
-    raise NotImplementedError
+    ids = sorted({d["prompt_id"] for d in data})
+    random.Random(seed).shuffle(ids)
+    test_ids = set(ids[: round(test_frac * len(ids))])
+    return [d for d in data if d["prompt_id"] not in test_ids], [d for d in data if d["prompt_id"] in test_ids]
 
 
 class RewardModel(nn.Module):
@@ -37,28 +39,45 @@ class RewardModel(nn.Module):
 
     def __init__(self, in_dim: int, hidden: int = 64):
         super().__init__()
-        # TODO
-        raise NotImplementedError
+        self.net = nn.Sequential(nn.Linear(in_dim, hidden), nn.ReLU(), nn.Linear(hidden, hidden), nn.ReLU(),
+                                 nn.Linear(hidden, 1))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # TODO
-        raise NotImplementedError
+        return self.net(x).squeeze(-1)  # (B,)
 
 
 def pairwise_loss(r_chosen: torch.Tensor, r_rejected: torch.Tensor) -> torch.Tensor:
     """-mean(logsigmoid(r_c - r_r))."""
-    # TODO
-    raise NotImplementedError
+    return -nn.functional.logsigmoid(r_chosen - r_rejected).mean()
 
 
 @torch.no_grad()
 def pair_accuracy(model: nn.Module, data: list) -> float:
-    # TODO
-    raise NotImplementedError
+    model.eval()
+    c = torch.stack([d["chosen"] for d in data])
+    r = torch.stack([d["rejected"] for d in data])
+    return (model(c) > model(r)).float().mean().item()
 
 
 def train_rm(model: nn.Module, train: list, epochs: int = 30, lr: float = 3e-3, batch: int = 64,
              seed: int = 0, weight_decay: float = 1e-4) -> list:
     """AdamW, shuffled minibatches (torch.Generator seeded with seed). Return per-epoch mean training loss."""
-    # TODO
-    raise NotImplementedError
+    g = torch.Generator().manual_seed(seed)
+    c = torch.stack([d["chosen"] for d in train])
+    r = torch.stack([d["rejected"] for d in train])
+    opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
+    history = []
+    for _ in range(epochs):
+        model.train()
+        perm = torch.randperm(len(train), generator=g)
+        total, n = 0.0, 0
+        for i in range(0, len(train), batch):
+            idx = perm[i:i + batch]
+            loss = pairwise_loss(model(c[idx]), model(r[idx]))
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+            total += loss.item() * len(idx)
+            n += len(idx)
+        history.append(total / n)
+    return history

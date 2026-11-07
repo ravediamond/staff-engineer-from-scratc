@@ -19,6 +19,6 @@ def call(fn, attempts, sleep, delays):
         try:
             return fn()
         except HTTPError as e:
-            if i == attempts - 1:
+            if e.status not in RETRYABLE or i == attempts - 1:
                 raise
             sleep(delays[i])

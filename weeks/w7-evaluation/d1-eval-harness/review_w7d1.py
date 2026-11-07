@@ -12,8 +12,7 @@ def delta_ci(base: list, new: list, n_boot=2000, seed=0):
     n = len(base)
     ds = []
     for _ in range(n_boot):
-        a = [base[rng.randrange(n)] for _ in range(n)]
-        b = [new[rng.randrange(n)] for _ in range(n)]
-        ds.append(sum(b) / n - sum(a) / n)
+        idx = [rng.randrange(n) for _ in range(n)]
+        ds.append(sum(new[i] - base[i] for i in idx) / n)
     ds.sort()
     return ds[int(0.025 * n_boot)], ds[int(0.975 * n_boot) - 1]

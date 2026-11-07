@@ -10,4 +10,4 @@ def quorum_read(replicas, key, r):
     responses = [rep[key] for rep in replicas[:r] if key in rep]
     if not responses:
         return None
-    return responses[0][1]
+    return max(responses, key=lambda vv: vv[0])[1]

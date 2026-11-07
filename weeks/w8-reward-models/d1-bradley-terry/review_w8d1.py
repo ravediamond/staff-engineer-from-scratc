@@ -8,7 +8,7 @@ import torch
 
 def win_prob(r, i, j):
     """P(i beats j) under Bradley-Terry."""
-    return torch.sigmoid(r[j] - r[i])
+    return torch.sigmoid(r[i] - r[j])
 
 
 def fit(n, comparisons, steps=300, lr=0.05):

@@ -7,5 +7,5 @@ import re
 
 
 def has_section(md, name):
-    text = md
+    text = re.sub(r"^```.*?^```[^\n]*\n?", "", md, flags=re.S | re.M)
     return re.search(rf"^## {re.escape(name)}\s*$", text, flags=re.M | re.I) is not None

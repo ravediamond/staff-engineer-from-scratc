@@ -27,5 +27,17 @@ def build(values: list):
 
 
 def level_order(root) -> list:
-    # TODO
-    raise NotImplementedError
+    if root is None:
+        return []
+    out, q = [], deque([root])
+    while q:
+        level = []
+        for _ in range(len(q)):
+            n = q.popleft()
+            level.append(n.val)
+            if n.left:
+                q.append(n.left)
+            if n.right:
+                q.append(n.right)
+        out.append(level)
+    return out

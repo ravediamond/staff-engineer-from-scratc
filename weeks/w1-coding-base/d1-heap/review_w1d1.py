@@ -24,7 +24,7 @@ def heap_pop(h: list):
         l, r = 2 * i + 1, 2 * i + 2
         if l >= n:
             break
-        child = l
+        child = r if (r < n and h[r] < h[l]) else l
         if h[child] < h[i]:
             h[i], h[child] = h[child], h[i]
             i = child

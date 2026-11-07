@@ -20,32 +20,50 @@ class LRUCache:
         self.head.next, self.tail.prev = self.tail, self.head
 
     def _unlink(self, n: _Node) -> None:
-        # TODO
-        raise NotImplementedError
+        n.prev.next, n.next.prev = n.next, n.prev
 
     def _push_front(self, n: _Node) -> None:
-        # TODO
-        raise NotImplementedError
+        n.prev, n.next = self.head, self.head.next
+        self.head.next.prev = n
+        self.head.next = n
 
     def _evict_lru(self) -> _Node:
-        # TODO
-        raise NotImplementedError
+        n = self.tail.prev
+        self._unlink(n)
+        del self.map[n.key]
+        return n
 
     def get(self, key, default=None):
-        # TODO
-        raise NotImplementedError
+        n = self.map.get(key)
+        if n is None:
+            return default
+        self._unlink(n)
+        self._push_front(n)
+        return n.val
 
     def put(self, key, value) -> None:
-        # TODO
-        raise NotImplementedError
+        n = self.map.get(key)
+        if n is not None:
+            n.val = value
+            self._unlink(n)
+            self._push_front(n)
+            return
+        n = _Node(key, value)
+        self.map[key] = n
+        self._push_front(n)
+        if len(self.map) > self.cap:
+            self._evict_lru()
 
     def __len__(self) -> int:
         return len(self.map)
 
     def keys_mru(self) -> list:
         """Keys from most to least recently used."""
-        # TODO
-        raise NotImplementedError
+        out, n = [], self.head.next
+        while n is not self.tail:
+            out.append(n.key)
+            n = n.next
+        return out
 
 
 class TTLCache(LRUCache):
@@ -57,15 +75,26 @@ class TTLCache(LRUCache):
         self.clock = clock
 
     def put(self, key, value) -> None:
-        # TODO
-        raise NotImplementedError
+        super().put(key, value)
+        self.map[key].expires = self.clock() + self.ttl
 
     def get(self, key, default=None):
         """Expired entries are removed on access and return default (lazy expiry)."""
-        # TODO
-        raise NotImplementedError
+        n = self.map.get(key)
+        if n is None:
+            return default
+        if self.clock() >= n.expires:
+            self._unlink(n)
+            del self.map[key]
+            return default
+        return super().get(key, default)
 
     def purge_expired(self) -> int:
         """Remove every expired entry. Return how many were removed."""
-        # TODO
-        raise NotImplementedError
+        now, removed = self.clock(), 0
+        for key, n in list(self.map.items()):
+            if now >= n.expires:
+                self._unlink(n)
+                del self.map[key]
+                removed += 1
+        return removed

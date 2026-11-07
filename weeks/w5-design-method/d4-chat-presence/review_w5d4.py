@@ -10,7 +10,7 @@ class Receipts:
         self.pointer = {}
 
     def ack(self, user, conv, seq):
-        self.pointer[(user, conv)] = seq
+        self.pointer[(user, conv)] = max(self.pointer.get((user, conv), 0), seq)
 
     def unread(self, user, conv, last_seq):
         return last_seq - self.pointer.get((user, conv), 0)

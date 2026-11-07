@@ -19,6 +19,8 @@ class Middleware:
         fp = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
         if key in self.done:
             stored_fp, response = self.done[key]
+            if stored_fp != fp:
+                raise Conflict(key)
             return response
         response = handler(body)
         self.done[key] = (fp, response)

@@ -4,5 +4,11 @@ from collections import defaultdict
 
 
 def subarray_sum(nums: list, k: int) -> int:
-    # TODO
-    raise NotImplementedError
+    seen = defaultdict(int)
+    seen[0] = 1
+    s = count = 0
+    for x in nums:
+        s += x
+        count += seen[s - k]
+        seen[s] += 1
+    return count

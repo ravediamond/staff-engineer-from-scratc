@@ -9,12 +9,16 @@ class TokenBucket:
         self.last = clock()
 
     def _refill(self) -> None:
-        # TODO
-        raise NotImplementedError
+        now = self.clock()
+        self.tokens = min(self.capacity, self.tokens + (now - self.last) * self.rate)
+        self.last = now
 
     def allow(self, cost: float = 1) -> bool:
-        # TODO
-        raise NotImplementedError
+        self._refill()
+        if self.tokens >= cost:
+            self.tokens -= cost
+            return True
+        return False
 
 
 class SlidingWindowLog:
@@ -25,8 +29,13 @@ class SlidingWindowLog:
         self.log: deque = deque()
 
     def allow(self) -> bool:
-        # TODO
-        raise NotImplementedError
+        now = self.clock()
+        while self.log and self.log[0] <= now - self.window:
+            self.log.popleft()
+        if len(self.log) < self.limit:
+            self.log.append(now)
+            return True
+        return False
 
 
 class SlidingWindowCounter:
@@ -39,8 +48,18 @@ class SlidingWindowCounter:
         self.prev = 0
 
     def allow(self) -> bool:
-        # TODO
-        raise NotImplementedError
+        now = self.clock()
+        start = (now // self.window) * self.window
+        if start != self.win_start:
+            self.prev = self.curr if start - self.win_start == self.window else 0
+            self.curr = 0
+            self.win_start = start
+        frac = (now - self.win_start) / self.window
+        estimate = self.prev * (1 - frac) + self.curr
+        if estimate + 1 <= self.limit:
+            self.curr += 1
+            return True
+        return False
 
 
 class KeyedLimiter:
@@ -51,5 +70,7 @@ class KeyedLimiter:
         self.limiters: dict = {}
 
     def allow(self, key, *args) -> bool:
-        # TODO
-        raise NotImplementedError
+        lim = self.limiters.get(key)
+        if lim is None:
+            lim = self.limiters[key] = self.factory()
+        return lim.allow(*args)

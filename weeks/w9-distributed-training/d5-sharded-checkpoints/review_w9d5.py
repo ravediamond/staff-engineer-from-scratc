@@ -14,5 +14,8 @@ def latest(root):
         mpath = os.path.join(d, "manifest.json")
         if not os.path.exists(mpath):
             continue
-        return s
+        with open(mpath) as f:
+            shards = json.load(f)["shards"]
+        if all(os.path.exists(os.path.join(d, name)) for name in shards):
+            return s
     return None

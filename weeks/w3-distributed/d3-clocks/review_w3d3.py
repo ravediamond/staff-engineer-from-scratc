@@ -6,4 +6,4 @@ WHY:
 
 
 def merge(a: dict, b: dict) -> dict:
-    return dict(a) if sum(a.values()) >= sum(b.values()) else dict(b)
+    return {k: max(a.get(k, 0), b.get(k, 0)) for k in a.keys() | b.keys()}
