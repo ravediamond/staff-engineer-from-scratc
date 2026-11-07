@@ -111,9 +111,26 @@ Mark each column honestly: ✅ done alone · 🟡 needed a hint · ❌ looked at
 | d4 behavioral + deep dive |  |  |  |  |
 | d5 take-home + pair programming |  |  |  |  |
 
+## Weekly checks (AI off, see LEARNING.md rule 3)
+| Week | Mon delayed recall (function, pass/fail, minutes) | Fri AI-off gate (drill, solved?, minutes) | Review cards clean % (`review.py stats`) | AI used to generate/debug exercises (honest count) |
+|---|---|---|---|---|
+| 1 |  |  |  |  |
+| 2 |  |  |  |  |
+| 3 |  |  |  |  |
+| 4 |  |  |  |  |
+| 5 |  |  |  |  |
+| 6 |  |  |  |  |
+| 7 |  |  |  |  |
+| 8 |  |  |  |  |
+| 9 |  |  |  |  |
+| 10 |  |  |  |  |
+| 11 |  |  |  |  |
+| 12 |  |  |  |  |
+
 ## Weekly retro (Friday, 5 min, copy per week)
-- Hardest thing:
+- Hardest thing (this is next Monday's delayed-recall target):
 - Pace (too easy / right / too hard):
+- Lab marks vs AI-off gate: same direction? If marks are ✅ and the gate fails, I am in substitute mode.
 - What I shipped this week (link):
 - What to change next week:
 
