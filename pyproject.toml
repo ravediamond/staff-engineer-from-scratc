@@ -1,0 +1,14 @@
+[project]
+name = "staff-engineer-from-scratch"
+version = "0.1.0"
+description = "12-week hands-on path to staff engineer in ML/AI systems: SWE base, RAG, eval, reward models, distributed training, harnesses"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pytest>=8.0",
+    "torch>=2.4",        # weeks 8 and 9 (CPU only, gloo backend)
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["weeks", "drills"]

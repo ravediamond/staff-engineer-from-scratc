@@ -1,0 +1,16 @@
+{
+  "stories": [
+    {
+      "id": "eval-gate",
+      "title": "Introduced a regression gate for an LLM assistant used by 3 business units",
+      "situation": "Fictional example. An internal LLM assistant shipped prompt changes weekly; two releases in a quarter degraded answer quality and were caught by users, not by the team.",
+      "task": "No one owned quality. I proposed to own the release-quality bar across the three teams shipping into the assistant.",
+      "action": "Wrote a one-page RFC with two alternatives (human review per release vs automated gate). Built a 300-case eval set with stratified slices, calibrated an LLM judge against 2 annotators (kappa 0.71), and added a paired-bootstrap gate to CI. Ran it in shadow mode for 4 weeks before making it blocking. Trained one engineer per team to own their slice.",
+      "result": "Zero user-reported regressions in the next two quarters; release cadence went from weekly to twice weekly because review time dropped from 2 days to 2 hours. The gate was adopted by two other products.",
+      "numbers": ["300 cases", "kappa 0.71", "2 days -> 2 hours", "0 regressions in 2 quarters"],
+      "signals": ["scope", "ambiguity", "influence", "technical-depth", "execution", "people-growth"],
+      "what_i_would_change": "Start with shadow mode on day one instead of after the first false block.",
+      "level": "staff"
+    }
+  ]
+}
