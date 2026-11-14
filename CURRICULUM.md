@@ -132,6 +132,15 @@ and solutions: `solutions` branch. Weekly: 4 drills, 1 reading slot, 1 public sh
 | Thu | d4 GPU scheduling | gang placement, quotas with borrowing and reclaim, device claims, Young/Daly | gang reserved pod by pod |
 | Fri | d5 LLM serving + **design #8** | KV math, cold start, endpoint picker, autoscaling signal; host and fine-tune LLMs on K8s | scaling on GPU utilisation |
 
+## Week 15: databases · K: `19`
+| Day | Lab | Build | Review bug |
+|---|---|---|---|
+| Mon | d1 MVCC | snapshots, three isolation levels, lost update, write skew, vacuum | later commits visible |
+| Tue | d2 B+tree & indexes | search, insert with splits, range scan; leftmost prefix, covering | scan stops at leaf end |
+| Wed | d3 SQL | top-N per group, running totals, anti-join, sessions, covering index + EXPLAIN (SQLite) | `NOT IN` with NULL |
+| Thu | d4 replication, app side | LSN routing: read-your-writes, monotonic reads; failover loss | routing ignores lag |
+| Fri | d5 money | double-entry ledger, idempotent transfers, seat holds, reconciliation | float amounts |
+
 ## Drills (4 per week): `drills/w01` … `drills/w12` · Reading slot: `reading/` · Ship log: `SHIPLOG.md`
 
 ## After week 12

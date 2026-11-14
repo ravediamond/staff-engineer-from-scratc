@@ -3,7 +3,7 @@
 Part 1: 12 weeks, 1 hour a day, Monday to Friday. Part 2 (week 13 onward): every blind side found by a gap
 analysis against 2025–2026 staff loops, added week by week (`ROADMAP.md`). No fixed end: complete beats short.
 
- Goal: become, for real, a staff engineer in
+Goal: become, for real, a staff engineer in
 **ML/AI systems** on a **solid general-SWE base**, and pass the full staff loop at Google (L6),
 Meta (E6) and Paris unicorns (Mistral, Hugging Face, H, Dust, Photoroom, Poolside, Alan, Doctolib…).
 
@@ -80,7 +80,7 @@ Read it only after you graded yourself.
 - `scripts/review.py`: spaced retrieval over every `questions.md` you finish
 - `weeks/`: the labs (60 in Part 1, growing in Part 2)
 - `drills/`: 48 interview problems with tests, 4 per week
-- `knowledge/`: 18 dense primers with interview questions (the discussion rounds)
+- `knowledge/`: 19 dense primers with interview questions (the discussion rounds)
 - `principal/`: the staff → principal playbook (what changes, how it is judged, exercises)
 - `reading/`: the weekly read-only slot
 - `private-template/`: the format of your private material (STAR bank, case files). Your real
