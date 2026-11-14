@@ -21,6 +21,9 @@ ends with questions; answers are in collapsed `<details>` blocks.
 | `13-question-bank.md` | 12 | mixed questions for mock warm-ups |
 | `14-reading-maps.md` | any | what to look for in each reading-slot file |
 | `15-staff-to-principal.md` | after 12 | what changes at principal, and how to get there |
+| `16-streaming-and-messaging.md` | 13 | the log, ISR/HW/acks, producers and groups, stream processing, outbox/CDC, schemas, choosing a broker |
+| `17-kubernetes.md` | 14 | control plane, control loops, workloads, scheduling, networking, rollouts, autoscaling, debugging |
+| `18-ml-platform-on-kubernetes.md` | 14 | GPUs (device plugin, DRA, MIG), Kueue and gangs, training jobs, LLM serving, fine-tuning as a product |
 
 ## How to study a primer (30–45 min, on 2h days or weekends)
 
