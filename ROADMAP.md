@@ -13,8 +13,8 @@ Status: ✅ in the repo · ⏳ next · 📋 planned.
 | G3 | Kubernetes core | `weeks/w14-kubernetes` d1–d3, `knowledge/17`, `handson/k8s` | ✅ |
 | G4 | Kubernetes for ML: GPUs, quotas, gangs | `weeks/w14-kubernetes` d4, `knowledge/18` | ✅ |
 | G5 | LLM serving on Kubernetes | `weeks/w14-kubernetes` d5 + design #8 | ✅ |
-| G6 | Fine-tuning platform (LoRA, QLoRA, promotion gate) | week 15 | ⏳ |
-| G7 | Databases: MVCC, isolation, B-tree, query plans, sharding | week 15 | ⏳ |
+| G6 | Fine-tuning platform (LoRA, QLoRA, promotion gate) | week 16 | ⏳ |
+| G7 | Databases: MVCC, isolation, B+tree, SQL, replication, ledger and holds | `weeks/w15-databases`, `knowledge/19` | ✅ |
 | G9 | Recommenders, ranking, ML breadth (two-tower, logQ, IPS, calibration) | week 16 | ⏳ |
 | G11 | Observability, SLOs, burn rates, incident response, DR | week 16 | ⏳ |
 | G8 | Classic design breadth (booking, ledger, geo, CRDT, TSDB, object store, crawler, notifications, cache) | weeks 17–18 | 📋 |
@@ -33,5 +33,5 @@ Status: ✅ in the repo · ⏳ next · 📋 planned.
 | G23 | RL post-training (GRPO, verifiable rewards) | week 24 | 📋 |
 | G24 | Staff behaviours II (strategy doc, TCO, past-project presentation) | week 25 | 📋 |
 
-Order of work if an interview is close: G1–G5 (done) → G7 → G9 → G8 → G11 → G6 → the rest.
+Order of work if an interview is close: G1–G5 and G7 (done) → G9 → G8 → G11 → G6 → the rest.
 `SELF_AUDIT.md` is the checklist: every line you cannot answer out loud in two minutes is a blind side.

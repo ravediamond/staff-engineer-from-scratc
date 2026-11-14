@@ -72,7 +72,7 @@ material is not in the repo yet (`ROADMAP.md`): use the references in the primer
 - [ ] Real-time features and training-serving skew (roadmap G20).
 - [ ] When not to use event sourcing / CQRS.
 
-## Databases (W4 d1–d2; rest: roadmap G7)
+## Databases (W4 d1–d2, W15, `knowledge/19`)
 - [ ] B-tree vs LSM: read, write and space amplification.
 - [ ] Isolation levels with one anomaly each; write skew.
 - [ ] MVCC and VACUUM in Postgres.

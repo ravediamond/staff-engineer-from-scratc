@@ -131,6 +131,15 @@ Mark each column honestly: ✅ done alone · 🟡 needed a hint · ❌ looked at
 | d5 LLM serving + design #8 |  |  |  |  |  |  |
 | hands-on kind (3 sessions) |  |  |  |  |  |  |
 
+## Week 15: databases
+| Day | Predict misses | Build | Review | Questions out loud | Redo | Notes |
+|---|---|---|---|---|---|---|
+| d1 MVCC & isolation |  |  |  |  |  |  |
+| d2 B+tree & index choice |  |  |  |  |  |  |
+| d3 SQL under pressure |  |  |  |  |  |  |
+| d4 replication, app side |  |  |  |  |  |  |
+| d5 money: ledger, holds |  |  |  |  |  |  |
+
 ## Self-audit (`SELF_AUDIT.md`): date and count of ✅ / 🟡 / ❌ per pass
 | Date | ✅ | 🟡 | ❌ | Weakest area |
 |---|---|---|---|---|

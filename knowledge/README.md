@@ -24,6 +24,7 @@ ends with questions; answers are in collapsed `<details>` blocks.
 | `16-streaming-and-messaging.md` | 13 | the log, ISR/HW/acks, producers and groups, stream processing, outbox/CDC, schemas, choosing a broker |
 | `17-kubernetes.md` | 14 | control plane, control loops, workloads, scheduling, networking, rollouts, autoscaling, debugging |
 | `18-ml-platform-on-kubernetes.md` | 14 | GPUs (device plugin, DRA, MIG), Kueue and gangs, training jobs, LLM serving, fine-tuning as a product |
+| `19-databases.md` | 15 | isolation and MVCC, indexes and plans, SQL patterns, replication and sharding, choosing a store, money |
 
 ## How to study a primer (30–45 min, on 2h days or weekends)
 
