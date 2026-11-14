@@ -7,8 +7,16 @@ def place_gang(free: dict[str, int], pods: int, gpus_per_pod: int):
     free: node -> free GPUs. Place pods one at a time on the feasible node with the LEAST free GPUs
     (best fit: keeps big holes for big jobs; ties: smallest node name), working on a COPY.
     Return the list of node names (one per pod) if all pods fit, else None. Never modify `free`."""
-    # TODO
-    raise NotImplementedError
+    left = dict(free)
+    placement = []
+    for _ in range(pods):
+        candidates = [n for n in left if left[n] >= gpus_per_pod]
+        if not candidates:
+            return None
+        node = min(candidates, key=lambda n: (left[n], n))
+        left[node] -= gpus_per_pod
+        placement.append(node)
+    return placement
 
 
 class QuotaManager:
@@ -35,13 +43,33 @@ class QuotaManager:
            whose removal would take its queue BELOW its nominal quota (that quota is guaranteed).
            If wl fits after that, remove the victims, admit wl, return (True, victims).
         3. Otherwise change nothing and return (False, [])."""
-        # TODO
-        raise NotImplementedError
+        total = sum(self.nominal.values())
+        free = total - sum(w["gpus"] for w in self.admitted)
+        if wl["gpus"] <= free:
+            self.admitted.append(wl)
+            return True, []
+        if self.used(wl["queue"]) + wl["gpus"] > self.nominal[wl["queue"]]:
+            return False, []
+        usage = {q: self.used(q) for q in self.nominal}
+        order = sorted(((w["priority"], -i, w) for i, w in enumerate(self.admitted) if w["queue"] != wl["queue"]),
+                       key=lambda t: (t[0], t[1]))
+        victims = []
+        for _, _, w in order:
+            if free >= wl["gpus"]:
+                break
+            if usage[w["queue"]] - w["gpus"] >= self.nominal[w["queue"]]:
+                victims.append(w)
+                usage[w["queue"]] -= w["gpus"]
+                free += w["gpus"]
+        if free < wl["gpus"]:
+            return False, []
+        self.admitted = [w for w in self.admitted if w not in victims]
+        self.admitted.append(wl)
+        return True, [w["name"] for w in victims]
 
     def release(self, name: str) -> None:
         """The workload finished: remove it."""
-        # TODO
-        raise NotImplementedError
+        self.admitted = [w for w in self.admitted if w["name"] != name]
 
 
 def match_devices(devices: list[dict], count: int, min_memory_gb: float = 0, model: str | None = None):
@@ -49,18 +77,22 @@ def match_devices(devices: list[dict], count: int, min_memory_gb: float = 0, mod
     Pick `count` unallocated devices with memory_gb >= min_memory_gb and (model is None or equal),
     preferring the SMALLEST memory that satisfies the claim (ties: name). Mark them allocated and return
     their names; if fewer than `count` match, allocate nothing and return None."""
-    # TODO
-    raise NotImplementedError
+    ok = [d for d in devices if not d["allocated"] and d["memory_gb"] >= min_memory_gb
+          and (model is None or d["model"] == model)]
+    if len(ok) < count:
+        return None
+    chosen = sorted(ok, key=lambda d: (d["memory_gb"], d["name"]))[:count]
+    for d in chosen:
+        d["allocated"] = True
+    return [d["name"] for d in chosen]
 
 
 def young_daly_interval(checkpoint_cost: float, mtbf: float) -> float:
     """sqrt(2 * checkpoint_cost * mtbf), same time unit as the inputs."""
-    # TODO
-    raise NotImplementedError
+    return math.sqrt(2 * checkpoint_cost * mtbf)
 
 
 def wasted_fraction(interval: float, checkpoint_cost: float, mtbf: float) -> float:
     """First-order share of time lost: checkpoint_cost / interval (writing checkpoints)
     + interval / (2 * mtbf) (work redone after a failure: half an interval on average)."""
-    # TODO
-    raise NotImplementedError
+    return checkpoint_cost / interval + interval / (2 * mtbf)

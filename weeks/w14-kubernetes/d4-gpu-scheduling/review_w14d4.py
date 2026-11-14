@@ -1,15 +1,18 @@
-"""Review: admission of distributed training jobs in an internal batch system. On Monday mornings the cluster
-shows every GPU "allocated" and no job running. Find the bug, fix it, explain:
+"""Review: admission of distributed training jobs in an internal batch system.
 
-WHY:
+WHY: reservations were made pod by pod directly in the shared state, and a job that could not be fully
+placed returned False while KEEPING the GPUs it had already reserved. Several partial jobs then held
+the whole cluster and none could start. Gang admission must be all-or-nothing: plan on a copy, commit
+only if every pod fits.
 """
 
 
 def admit(free: dict[str, int], pods: int, gpus_per_pod: int) -> bool:
-    """Reserve GPUs for a job in `free` (node -> free GPUs). True if the job can start."""
+    plan = dict(free)
     for _ in range(pods):
-        node = next((n for n in sorted(free) if free[n] >= gpus_per_pod), None)
+        node = next((n for n in sorted(plan) if plan[n] >= gpus_per_pod), None)
         if node is None:
             return False
-        free[node] -= gpus_per_pod
+        plan[node] -= gpus_per_pod
+    free.update(plan)
     return True

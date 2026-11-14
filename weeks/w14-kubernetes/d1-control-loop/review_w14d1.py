@@ -1,8 +1,9 @@
-"""Review: a hand-written controller that keeps `replicas` workers alive. After an API-server hiccup (the watch
-reconnected and replayed recent events), the team found 9 workers running for replicas=6 and a doubled GPU
-bill. Find the bug, fix it, explain:
+"""Review: a hand-written controller that keeps `replicas` workers alive.
 
-WHY:
+WHY: it was edge-triggered: "one DELETED event = start one worker". Watch events are delivered at least
+once (reconnects replay them), so each replayed event started an extra worker. A controller must be
+level-triggered: treat the event as a hint, then compare the observed state with the desired count and
+create or delete the difference. Running it twice changes nothing.
 """
 
 
@@ -16,13 +17,15 @@ class Controller:
         self.counter += 1
         self.workers.add(f"worker-{self.counter}")
 
-    def start(self) -> None:
-        for _ in range(self.replicas):
+    def reconcile(self) -> None:
+        while len(self.workers) < self.replicas:
             self._start()
 
+    def start(self) -> None:
+        self.reconcile()
+
     def on_event(self, event: tuple[str, str]) -> None:
-        """event: ("DELETED", worker_name), delivered at least once."""
         kind, name = event
         if kind == "DELETED":
             self.workers.discard(name)
-            self._start()
+        self.reconcile()

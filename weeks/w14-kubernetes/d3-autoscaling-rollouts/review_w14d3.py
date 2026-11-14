@@ -1,11 +1,11 @@
-"""Review: the rollout controller of an in-house deploy tool. A release with a bad config took the whole
-service down in under a minute: every old pod was removed while the new ones were still crash-looping.
-Find the bug, fix it, explain:
+"""Review: the rollout controller of an in-house deploy tool.
 
-WHY:
+WHY: it counted new pods as available as soon as they existed. Unready pods serve nothing: with a bad
+release every new pod stayed unready, yet each one "allowed" another old pod to be deleted until none
+was left. Availability counts Ready pods only; the readiness probe is what stops a bad rollout.
 """
 
 
 def old_pods_to_delete(desired: int, max_unavailable: int, old: int, new_ready: int, new_unready: int) -> int:
-    available = old + new_ready + new_unready
+    available = old + new_ready
     return max(0, min(old, available - (desired - max_unavailable)))

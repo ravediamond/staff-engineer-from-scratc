@@ -44,13 +44,17 @@ class WorkQueue:
         self._waiting: set = set()
 
     def add(self, key) -> None:
-        # TODO
-        raise NotImplementedError
+        if key not in self._waiting:
+            self._waiting.add(key)
+            self._queue.append(key)
 
     def get(self):
         """Pop the oldest key (None if empty). Once popped, the key may be added again."""
-        # TODO
-        raise NotImplementedError
+        if not self._queue:
+            return None
+        key = self._queue.popleft()
+        self._waiting.discard(key)
+        return key
 
     def __len__(self) -> int:
         return len(self._queue)
@@ -67,5 +71,17 @@ def reconcile_replicaset(store: Store, name: str) -> dict:
       (store.version + 1 is unique because every create bumps the version).
     - Too many: delete the surplus, choosing not-ready pods first, then the newest (largest "created").
     - Read the state from the store on every call: no memory between calls, no use of store.events."""
-    # TODO
-    raise NotImplementedError
+    rs = store.get("ReplicaSet", name)
+    pods = [p for p in store.list("Pod") if p["owner"] == name]
+    created, deleted = [], []
+    want = rs["replicas"] if rs is not None else 0
+    if len(pods) < want:
+        for _ in range(want - len(pods)):
+            pod = store.create("Pod", f"{name}-{store.version + 1}", owner=name, ready=False)
+            created.append(pod["name"])
+    elif len(pods) > want:
+        victims = sorted(pods, key=lambda p: (p["ready"], -p["created"]))[:len(pods) - want]
+        for p in victims:
+            store.delete("Pod", p["name"])
+            deleted.append(p["name"])
+    return {"created": created, "deleted": deleted}

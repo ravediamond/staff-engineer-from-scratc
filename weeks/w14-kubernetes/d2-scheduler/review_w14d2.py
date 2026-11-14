@@ -1,10 +1,10 @@
-"""Review: a custom scheduler extension for GPU nodes. Pods start, then fail with "insufficient GPU" at
-admission on the node, and jobs sit in a crash loop. Find the bug, fix it, explain:
+"""Review: a custom scheduler extension for GPU nodes.
 
-WHY:
+WHY: the fit check compared the request with the node's CAPACITY, ignoring what bound pods have already
+requested. Every 8-GPU node looked feasible for ever, so pods were bound to full nodes and rejected by
+the kubelet. Fit = request <= capacity - already requested.
 """
 
 
 def feasible(pod_gpus: int, nodes: list[dict]) -> list[str]:
-    """nodes: [{"name", "gpus" (capacity), "used_gpus" (already requested by bound pods)}]."""
-    return [n["name"] for n in nodes if pod_gpus <= n["gpus"]]
+    return [n["name"] for n in nodes if pod_gpus <= n["gpus"] - n["used_gpus"]]

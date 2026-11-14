@@ -6,8 +6,9 @@ def hpa_desired(current: int, metric: float, target: float, min_replicas: int, m
                 tolerance: float = 0.1) -> int:
     """ceil(current * metric / target), unchanged if |metric / target - 1| <= tolerance,
     then clamped to [min_replicas, max_replicas]."""
-    # TODO
-    raise NotImplementedError
+    ratio = metric / target
+    desired = current if abs(ratio - 1) <= tolerance else math.ceil(current * ratio)
+    return max(min_replicas, min(max_replicas, desired))
 
 
 class Stabilizer:
@@ -20,8 +21,9 @@ class Stabilizer:
     def recommend(self, now: float, desired: int) -> int:
         """Record (now, desired); forget entries older than now - window (keep those exactly at the edge);
         return the max of what remains. Scale-up is therefore immediate, scale-down delayed."""
-        # TODO
-        raise NotImplementedError
+        self.history.append((now, desired))
+        self.history = [(t, d) for t, d in self.history if t >= now - self.window]
+        return max(d for _, d in self.history)
 
 
 def rollout_step(desired: int, max_surge: int, max_unavailable: int, old: int, new_ready: int,
@@ -32,8 +34,12 @@ def rollout_step(desired: int, max_surge: int, max_unavailable: int, old: int, n
     - available pods (old + new_ready) never drop below desired - max_unavailable.
     Create as many new pods and delete as many old pods as these rules allow (deletions are computed on
     the counts BEFORE this step's creations, since new pods start unready)."""
-    # TODO
-    raise NotImplementedError
+    total = old + new_ready + new_unready
+    new_total = new_ready + new_unready
+    create = max(0, min(desired + max_surge - total, desired - new_total))
+    available = old + new_ready
+    delete = max(0, min(old, available - (desired - max_unavailable)))
+    return create, delete
 
 
 def drain_plan(pods_on_node: list[str], ready: dict[str, int], min_available: dict[str, int]):
@@ -43,5 +49,12 @@ def drain_plan(pods_on_node: list[str], ready: dict[str, int], min_available: di
     Evict pods one by one: an eviction is allowed iff ready[app] - 1 >= min_available[app]; an allowed
     eviction lowers ready[app] by one (the replacement is not Ready yet). Do not modify the inputs.
     Return (evicted, blocked): two lists of app names in order."""
-    # TODO
-    raise NotImplementedError
+    ready = dict(ready)
+    evicted, blocked = [], []
+    for app in pods_on_node:
+        if ready[app] - 1 >= min_available.get(app, 0):
+            ready[app] -= 1
+            evicted.append(app)
+        else:
+            blocked.append(app)
+    return evicted, blocked

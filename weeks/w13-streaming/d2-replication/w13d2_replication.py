@@ -21,51 +21,85 @@ class Partition:
 
     def _advance_hw(self) -> None:
         """HW = min LEO over the ISR. During normal operation it never moves backwards."""
-        # TODO
-        raise NotImplementedError
+        self.hw = max(self.hw, min(len(self.logs[r]) for r in self.isr))
 
     def produce(self, value, acks) -> int:
         """Append to the leader's log, return the offset. acks is 0, 1 or "all".
         No leader -> PartitionOffline. acks == "all" with len(ISR) < min_insync -> NotEnoughReplicas
         (nothing is appended). Then update the HW."""
-        # TODO
-        raise NotImplementedError
+        if self.leader is None:
+            raise PartitionOffline()
+        if acks == "all" and len(self.isr) < self.min_insync:
+            raise NotEnoughReplicas(f"ISR {sorted(self.isr)} < min.insync.replicas {self.min_insync}")
+        log = self.logs[self.leader]
+        log.append(value)
+        self._advance_hw()
+        return len(log) - 1
 
     def acked(self, offset: int, acks) -> bool:
         """Has the producer of `offset` received its acknowledgement?
         acks 0 or 1: as soon as the leader has the record. "all": only once offset < HW."""
-        # TODO
-        raise NotImplementedError
+        if acks == "all":
+            return offset < self.hw
+        return self.leader is not None and offset < len(self.logs[self.leader])
 
     def replicate(self, follower: int, max_records: int | None = None) -> None:
         """One fetch by an alive follower (ignore the call if it is dead, is the leader, or there is no leader).
         1. Truncate the follower's log to its longest common prefix with the leader's log.
         2. Copy up to max_records of the leader's following records (None = all).
         3. If the follower's LEO now equals the leader's, add it to the ISR. Update the HW."""
-        # TODO
-        raise NotImplementedError
+        if self.leader is None or follower == self.leader or follower not in self.alive:
+            return
+        src, dst = self.logs[self.leader], self.logs[follower]
+        k = 0
+        while k < min(len(src), len(dst)) and src[k] == dst[k]:
+            k += 1
+        del dst[k:]
+        end = len(src) if max_records is None else min(len(src), k + max_records)
+        dst.extend(src[k:end])
+        if len(dst) == len(src):
+            self.isr.add(follower)
+        self._advance_hw()
 
     def shrink_isr(self, follower: int) -> None:
         """The leader drops a lagging follower from the ISR (never itself). Update the HW."""
-        # TODO
-        raise NotImplementedError
+        if follower != self.leader:
+            self.isr.discard(follower)
+            self._advance_hw()
 
     def fetch(self, offset: int, max_records: int = 100) -> list:
         """Consumer read from the leader: only records below the HW."""
-        # TODO
-        raise NotImplementedError
+        if self.leader is None:
+            raise PartitionOffline()
+        return self.logs[self.leader][offset:min(self.hw, offset + max_records)]
 
     def fail(self, replica: int) -> None:
         """Broker crash: remove from alive and ISR (its log stays on disk). If it was the leader, elect:
         the lowest-id alive ISR member; if the ISR is empty: with unclean=True the lowest-id alive replica
         (the ISR becomes {that replica}), otherwise no leader (None). On a new leader: epoch += 1 and
         HW = min(HW, new leader's LEO) (it only drops after an unclean election)."""
-        # TODO
-        raise NotImplementedError
+        self.alive.discard(replica)
+        self.isr.discard(replica)
+        if replica != self.leader:
+            return
+        if self.isr:
+            self.leader = min(self.isr)
+        elif self.unclean and self.alive:
+            self.leader = min(self.alive)
+            self.isr = {self.leader}
+        else:
+            self.leader = None
+            return
+        self.epoch += 1
+        self.hw = min(self.hw, len(self.logs[self.leader]))
 
     def recover(self, replica: int) -> None:
         """Broker restart: alive again, NOT in the ISR until a replicate() catches it up. If the partition
         had no leader and this replica was the last ISR member... keep it simple: if there is no leader and
         unclean=True, it becomes leader (ISR = {replica}, epoch += 1, HW = min(HW, its LEO))."""
-        # TODO
-        raise NotImplementedError
+        self.alive.add(replica)
+        if self.leader is None and self.unclean:
+            self.leader = replica
+            self.isr = {replica}
+            self.epoch += 1
+            self.hw = min(self.hw, len(self.logs[replica]))

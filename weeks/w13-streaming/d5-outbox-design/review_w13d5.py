@@ -1,12 +1,12 @@
-"""Review: an outbox relay. Roughly once a month, after a relay pod restart, one order never reaches the
-warehouse. Find the bug, fix it, explain:
+"""Review: an outbox relay.
 
-WHY:
+WHY: it marked the row as published BEFORE publishing. A crash between the two leaves a row flagged as
+sent that was never sent: the event is lost and nothing will retry it (at-most-once). Publish first,
+mark after: a crash then causes a duplicate, which idempotent consumers absorb (at-least-once).
 """
 
 
 def relay(rows: list[dict], publish, mark_published) -> None:
-    """rows: unpublished outbox rows in id order. mark_published(row_id) commits the flag."""
     for row in rows:
-        mark_published(row["id"])
         publish(row["topic"], row["key"], row["payload"])
+        mark_published(row["id"])
