@@ -1,6 +1,9 @@
 # Staff Engineer From Scratch
 
-12 weeks. 1 hour a day, Monday to Friday. Goal: become, for real, a staff engineer in
+Part 1: 12 weeks, 1 hour a day, Monday to Friday. Part 2 (week 13 onward): every blind side found by a gap
+analysis against 2025–2026 staff loops, added week by week (`ROADMAP.md`). No fixed end: complete beats short.
+
+ Goal: become, for real, a staff engineer in
 **ML/AI systems** on a **solid general-SWE base**, and pass the full staff loop at Google (L6),
 Meta (E6) and Paris unicorns (Mistral, Hugging Face, H, Dust, Photoroom, Poolside, Alan, Doctolib…).
 
@@ -47,9 +50,9 @@ The labs train you. The ship log makes you the person.
 On 2-hour days: delete your solution and redo the lab from a blank file, no notes.
 Then read the week's knowledge primer (`knowledge/`).
 
-## Friday designs (weeks 5–10)
+## Friday designs (weeks 5–10, 13, 14)
 
-Each Friday of weeks 5 to 10 has a `design.md`: a 45-minute written design of that week's
+Each Friday of weeks 5 to 10, and of weeks 13 and 14, has a `design.md`: a 45-minute written design of that week's
 platform, timed, then graded against `rubric.md`. A model answer is on the `solutions` branch.
 Read it only after you graded yourself.
 
@@ -70,11 +73,14 @@ Read it only after you graded yourself.
 ## Map
 
 - `LEARNING.md`: how to learn with this repo, from the 2025–2026 research on AI and skill formation
-- `CURRICULUM.md`: the 12 weeks, day by day
+- `CURRICULUM.md`: every week, day by day
+- `ROADMAP.md`: Part 2, the 24 gap tracks and their status
+- `SELF_AUDIT.md`: the no-blind-side checklist: answer each line out loud in two minutes
+- `handson/`: the same failures on real tools on your Mac (Kafka in Docker, Kubernetes with kind)
 - `scripts/review.py`: spaced retrieval over every `questions.md` you finish
-- `weeks/`: the 60 labs
+- `weeks/`: the labs (60 in Part 1, growing in Part 2)
 - `drills/`: 48 interview problems with tests, 4 per week
-- `knowledge/`: 15 dense primers with interview questions (the discussion rounds)
+- `knowledge/`: 18 dense primers with interview questions (the discussion rounds)
 - `principal/`: the staff → principal playbook (what changes, how it is judged, exercises)
 - `reading/`: the weekly read-only slot
 - `private-template/`: the format of your private material (STAR bank, case files). Your real

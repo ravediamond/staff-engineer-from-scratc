@@ -111,6 +111,31 @@ Mark each column honestly: ✅ done alone · 🟡 needed a hint · ❌ looked at
 | d4 behavioral + deep dive |  |  |  |  |
 | d5 take-home + pair programming |  |  |  |  |
 
+## Week 13: streaming and messaging
+| Day | Predict misses | Build | Review | Questions out loud | Redo | Notes |
+|---|---|---|---|---|---|---|
+| d1 commit log |  |  |  |  |  |  |
+| d2 replication, ISR, acks |  |  |  |  |  |  |
+| d3 producers & consumer groups |  |  |  |  |  |  |
+| d4 stream processing |  |  |  |  |  |  |
+| d5 outbox & schemas + design #7 |  |  |  |  |  |  |
+| hands-on Kafka (2 sessions) |  |  |  |  |  |  |
+
+## Week 14: Kubernetes
+| Day | Predict misses | Build | Review | Questions out loud | Redo | Notes |
+|---|---|---|---|---|---|---|
+| d1 control loop |  |  |  |  |  |  |
+| d2 scheduler & QoS |  |  |  |  |  |  |
+| d3 autoscaling & rollouts |  |  |  |  |  |  |
+| d4 GPU scheduling |  |  |  |  |  |  |
+| d5 LLM serving + design #8 |  |  |  |  |  |  |
+| hands-on kind (3 sessions) |  |  |  |  |  |  |
+
+## Self-audit (`SELF_AUDIT.md`): date and count of ✅ / 🟡 / ❌ per pass
+| Date | ✅ | 🟡 | ❌ | Weakest area |
+|---|---|---|---|---|
+|  |  |  |  |  |
+
 ## Weekly checks (AI off, see LEARNING.md rule 3)
 | Week | Mon delayed recall (function, pass/fail, minutes) | Fri AI-off gate (drill, solved?, minutes) | Review cards clean % (`review.py stats`) | AI used to generate/debug exercises (honest count) |
 |---|---|---|---|---|

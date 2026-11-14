@@ -1,4 +1,4 @@
-# Curriculum: 12 weeks, 60 sessions
+# Curriculum: Part 1 (12 weeks, 60 sessions) and Part 2 (week 13 onward)
 
 Each lab: README (concept + staff angle) → predict.md / predict_run.py → build with tests → review (planted bug) →
 questions.md (out loud). Fridays of weeks 5–10 add a 45-minute written design graded with a rubric. Model answers
@@ -112,7 +112,27 @@ and solutions: `solutions` branch. Weekly: 4 drills, 1 reading slot, 1 public sh
 | Thu | behavioral + project deep dive, scored with the calibrated scorer |
 | Fri | take-home (4 h) + pair programming on an existing codebase + final retro |
 
+## Part 2: no blind side (week 13 onward, see `ROADMAP.md` and `SELF_AUDIT.md`)
+
+## Week 13: streaming and messaging · K: `16` · hands-on: `handson/kafka`
+| Day | Lab | Build | Review bug |
+|---|---|---|---|
+| Mon | d1 commit log | segments, sparse index, retention, compaction | offsets renumbered |
+| Tue | d2 replication | ISR, high watermark, acks, failover, unclean election | HW from the leader's end offset |
+| Wed | d3 clients | partitioner, idempotent producer, range assignor, fenced commits, lag | zombie commit accepted |
+| Thu | d4 stream processing | event-time windows, watermarks, lateness, checkpoints | watermark = max |
+| Fri | d5 outbox + **design #7** | transactional outbox, relay, idempotent consumer, schema compatibility; order platform on Kafka | marked before publish |
+
+## Week 14: Kubernetes, then Kubernetes for models · K: `17`, `18` · hands-on: `handson/k8s`
+| Day | Lab | Build | Review bug |
+|---|---|---|---|
+| Mon | d1 control loop | work queue, level-triggered ReplicaSet reconcile | edge-triggered |
+| Tue | d2 scheduler | filter, spread vs bin-pack, taints, QoS, eviction order | fit against capacity |
+| Wed | d3 autoscaling & rollouts | HPA + stabilization, maxSurge/maxUnavailable, PDB drain | unready counted as available |
+| Thu | d4 GPU scheduling | gang placement, quotas with borrowing and reclaim, device claims, Young/Daly | gang reserved pod by pod |
+| Fri | d5 LLM serving + **design #8** | KV math, cold start, endpoint picker, autoscaling signal; host and fine-tune LLMs on K8s | scaling on GPU utilisation |
+
 ## Drills (4 per week): `drills/w01` … `drills/w12` · Reading slot: `reading/` · Ship log: `SHIPLOG.md`
 
 ## After week 12
-Repeat the weakest round weekly, keep shipping weekly, apply to three companies, and start `principal/05-exercises.md`.
+Continue with Part 2 (week 13 onward). In parallel: repeat the weakest round weekly, keep shipping weekly, apply to three companies, and start `principal/05-exercises.md`.
