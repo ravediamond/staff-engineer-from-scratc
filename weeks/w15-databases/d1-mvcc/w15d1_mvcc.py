@@ -40,13 +40,21 @@ class MVCCStore:
         - read_committed: creator has committed (as of now);
         - snapshot / serializable: creator has committed AND had committed when txn began, i.e.
           creator < txn.snapshot_next and creator not in txn.snapshot_active."""
-        # TODO
-        raise NotImplementedError
+        if creator == txn.id:
+            return True
+        if creator not in self.committed:
+            return False
+        if txn.isolation == "read_committed":
+            return True
+        return creator < txn.snapshot_next and creator not in txn.snapshot_active
 
     def read(self, txn: Txn, key):
         """Value of the NEWEST version of key visible to txn (None if none). Record key in txn.reads."""
-        # TODO
-        raise NotImplementedError
+        txn.reads.add(key)
+        for creator, value in reversed(self.versions.get(key, [])):
+            if self._visible(txn, creator):
+                return value
+        return None
 
     def write(self, txn: Txn, key, value) -> None:
         """Add a version [txn.id, value] (or replace txn's own uncommitted version of key).
@@ -55,15 +63,35 @@ class MVCCStore:
         - snapshot / serializable only: one from a committed transaction that txn cannot see (it committed
           after txn's snapshot) -> raise SerializationFailure (first committer wins).
         Record key in txn.writes."""
-        # TODO
-        raise NotImplementedError
+        versions = self.versions.setdefault(key, [])
+        for creator, _ in versions:
+            if creator == txn.id:
+                continue
+            if creator in self.active:
+                raise WriteConflict(key)
+            if (txn.isolation != "read_committed" and creator in self.committed
+                    and not self._visible(txn, creator)):
+                raise SerializationFailure(key)
+        for v in versions:
+            if v[0] == txn.id:
+                v[1] = value
+                break
+        else:
+            versions.append([txn.id, value])
+        txn.writes.add(key)
 
     def commit(self, txn: Txn) -> None:
         """serializable only: if any key in txn.reads has a version created by ANOTHER committed transaction
         that txn's snapshot cannot see, abort txn and raise SerializationFailure (what it read is stale, so
         its writes may rest on a false premise). Otherwise move txn from active to committed."""
-        # TODO
-        raise NotImplementedError
+        if txn.isolation == "serializable":
+            for key in txn.reads:
+                for creator, _ in self.versions.get(key, []):
+                    if creator != txn.id and creator in self.committed and not self._visible(txn, creator):
+                        self.abort(txn)
+                        raise SerializationFailure(key)
+        self.active.discard(txn.id)
+        self.committed.add(txn.id)
 
     def abort(self, txn: Txn) -> None:
         """Provided: the transaction's versions stay in the lists until vacuum; they are never visible."""
@@ -77,5 +105,18 @@ class MVCCStore:
           transaction in open_txns or for a transaction that would begin now (i.e. the newest committed
           version); every committed version older than that one is dead.
         Versions from active transactions are kept."""
-        # TODO
-        raise NotImplementedError
+        removed = 0
+        fresh = Txn(self.next_txid, "snapshot", set(self.active), self.next_txid)
+        for key, versions in self.versions.items():
+            needed = len(versions)
+            for viewer in [fresh, *open_txns]:
+                for i in range(len(versions) - 1, -1, -1):
+                    creator = versions[i][0]
+                    if creator in self.committed and self._visible(viewer, creator):
+                        needed = min(needed, i)
+                        break
+            keep = [v for i, v in enumerate(versions)
+                    if v[0] not in self.aborted and (v[0] in self.active or i >= needed)]
+            removed += len(versions) - len(keep)
+            self.versions[key] = keep
+        return removed

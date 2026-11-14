@@ -1,13 +1,12 @@
-"""Review: visibility check of a home-made MVCC layer, "repeatable read" mode. A month-end report read the
-same account twice inside one transaction and got two different balances. Find the bug, fix it, explain:
+"""Review: visibility check of a home-made MVCC layer, "repeatable read" mode.
 
-WHY:
+WHY: it asked "has the creator committed NOW?", which is read-committed behaviour: every new commit became
+visible in the middle of the report. A repeatable-read snapshot must only see transactions that had
+committed when the reader began: id below snapshot_next and not in snapshot_active.
 """
 
 
 def visible(creator: int, reader_id: int, snapshot_active: set[int], snapshot_next: int, committed: set[int]) -> bool:
-    """May the reader see a row version created by transaction `creator`?
-    snapshot_active: transactions in progress when the reader began. snapshot_next: first id not yet started then."""
     if creator == reader_id:
         return True
-    return creator in committed
+    return creator in committed and creator < snapshot_next and creator not in snapshot_active

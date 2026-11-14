@@ -27,13 +27,19 @@ class Cluster:
         """Append to the primary's log; LSN = new log length. If the cluster is synchronous, the most advanced
         replica (ties: smallest name) applies everything up to this LSN before the write returns.
         Update the session (last_write_lsn, and last_seen_lsn = max(itself, lsn)). Return the LSN."""
-        # TODO
-        raise NotImplementedError
+        self.log.append((key, value))
+        lsn = len(self.log)
+        if self.synchronous and self.applied:
+            best = min(self.applied, key=lambda r: (-self.applied[r], r))
+            self.applied[best] = lsn
+        session.last_write_lsn = lsn
+        session.last_seen_lsn = max(session.last_seen_lsn, lsn)
+        return lsn
 
     def replicate(self, replica: str, up_to: int | None = None) -> None:
         """The replica applies the log up to `up_to` (None = everything). It never moves backwards."""
-        # TODO
-        raise NotImplementedError
+        target = len(self.log) if up_to is None else min(up_to, len(self.log))
+        self.applied[replica] = max(self.applied[replica], target)
 
     def read(self, session: Session, key: str) -> tuple[object, str]:
         """Return (value, served_by). Serve from a replica whose applied LSN is >=
@@ -41,13 +47,26 @@ class Cluster:
         (ties: smallest name), to keep load off the freshest nodes. If none qualifies, serve from "primary".
         Set session.last_seen_lsn to the LSN of the state that was read (replica's applied LSN, or the
         primary's log length)."""
-        # TODO
-        raise NotImplementedError
+        need = max(session.last_write_lsn, session.last_seen_lsn)
+        ok = [r for r in self.applied if self.applied[r] >= need]
+        if ok:
+            who = min(ok, key=lambda r: (self.applied[r], r))
+            lsn = self.applied[who]
+        else:
+            who, lsn = "primary", len(self.log)
+        session.last_seen_lsn = lsn
+        return self._state_at(lsn).get(key), who
 
     def failover(self) -> dict:
         """The primary is lost. Promote the most advanced replica (ties: smallest name): the log is truncated
         to its applied LSN, it is removed from `applied`, every other replica is capped at the new log
         length, and the epoch increases by one.
         Return {"new_primary": name, "lost_writes": number of log entries dropped, "epoch": new epoch}."""
-        # TODO
-        raise NotImplementedError
+        best = min(self.applied, key=lambda r: (-self.applied[r], r))
+        keep = self.applied.pop(best)
+        lost = len(self.log) - keep
+        del self.log[keep:]
+        for r in self.applied:
+            self.applied[r] = min(self.applied[r], keep)
+        self.epoch += 1
+        return {"new_primary": best, "lost_writes": lost, "epoch": self.epoch}

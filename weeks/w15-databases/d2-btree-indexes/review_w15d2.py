@@ -1,7 +1,8 @@
-"""Review: range scan over the leaf level of a B+tree (used by "orders between two dates"). Reports are missing
-orders, but only for date ranges that are "long enough". Find the bug, fix it, explain:
+"""Review: range scan over the leaf level of a B+tree.
 
-WHY:
+WHY: the scan only looked at the first leaf. A range that crosses a leaf boundary must continue through
+the `next` links until a key greater than `hi` is found. Short ranges usually fit in one leaf, which is
+why the bug only showed on longer ones.
 """
 
 
@@ -12,5 +13,13 @@ class Leaf:
 
 
 def range_scan(first_leaf: Leaf, lo, hi) -> list:
-    """first_leaf: the leaf where `lo` belongs. Return keys with lo <= key <= hi."""
-    return [k for k in first_leaf.keys if lo <= k <= hi]
+    out = []
+    leaf = first_leaf
+    while leaf is not None:
+        for k in leaf.keys:
+            if k > hi:
+                return out
+            if k >= lo:
+                out.append(k)
+        leaf = leaf.next
+    return out
