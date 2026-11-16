@@ -419,7 +419,7 @@ The history then explains every number, which is what auditors, support and your
 
 ### Rule 3: idempotency keys
 
-A payment request times out. The client retries. Without protection, the customer is charged twice. The client sends a unique key per **intended operation** (week 2, day 3): the same key again returns the first result and changes nothing; the same key with different parameters is an error. A refused transfer (not enough funds) writes nothing.
+A payment request times out. The client retries. Without protection, the customer is charged twice. The client sends a unique key per **intended operation** (week 2, day 3): the same key again changes nothing (the lab's `transfer` then returns `False`); the same key with different parameters is an error. A refused transfer (not enough funds) writes nothing.
 
 ### Rule 4: holds with expiry
 
