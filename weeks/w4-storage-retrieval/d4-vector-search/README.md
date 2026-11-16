@@ -1,5 +1,8 @@
 # W4 D4: vector search: brute force, IVF, graphs, recall@k
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-vector-search) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/04-storage-and-retrieval.md` §4. Used in W6 D2.
 
 ## The one idea

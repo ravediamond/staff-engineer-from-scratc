@@ -1,5 +1,8 @@
 # Curriculum: Part 1 (12 weeks, 60 sessions) and Part 2 (week 13 onward)
 
+**Where the lessons are:** each week folder has a `README.md` with the full lesson for its five days. Start at
+`weeks/w1-coding-base/README.md`; the list of weeks is `weeks/README.md`. This file is only the map.
+
 Each lab: README (concept + staff angle) → predict.md / predict_run.py → build with tests → review (planted bug) →
 questions.md (out loud). Fridays of weeks 5–10 add a 45-minute written design graded with a rubric. Model answers
 and solutions: `solutions` branch. Weekly: 4 drills, 1 reading slot, 1 public ship. K = knowledge primer of the week.

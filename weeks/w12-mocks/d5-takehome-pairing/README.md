@@ -1,5 +1,7 @@
 # W12 D5: take-home + pair programming + final retro
 
+> **Guide for this round:** [`../README.md`](../README.md#day-5-take-home-pair-programming-final-retro) (the week page: how to run it, what is scored, where to repair afterwards).
+
 Paris unicorns often use a take-home or a pair-programming session on a realistic codebase instead of
 (or on top of) LeetCode rounds. Today: both, then the 12-week retro.
 

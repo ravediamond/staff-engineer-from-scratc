@@ -1,5 +1,8 @@
 # Knowledge primers: the discussion rounds
 
+**You do not need these to do the labs.** The lesson for each week is in its own folder (`weeks/<week>/README.md`).
+Primers are the interview layer on top: read one after its week, on a 2-hour day.
+
 The labs train your hands. The primers train what you must be able to **say**: mechanisms, the numbers
 that matter, the trade-offs, and the follow-up questions interviewers use to find your edge. Each primer
 ends with questions; answers are in collapsed `<details>` blocks.

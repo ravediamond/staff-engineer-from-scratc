@@ -1,5 +1,8 @@
 # W9 D2: DDP on two gloo processes
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-2-ddp-on-two-processes) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/09-distributed-training.md` §2.
 
 ## The one idea

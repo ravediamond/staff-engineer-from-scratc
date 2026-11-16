@@ -1,5 +1,8 @@
 # W7 D5: offline ↔ online agreement, launch rules + Friday design
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-5-does-offline-predict-online) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/07-evaluation-and-experimentation.md` §5.
 
 ## The one idea

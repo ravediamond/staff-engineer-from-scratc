@@ -1,5 +1,8 @@
 # W1 D1: binary heap, heapify, top-k
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-1-binary-heap-heapify-top-k) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/01-python-for-interviews.md` §2. Drill pattern: `drills/PATTERNS.md` "heaps".
 
 ## The one idea

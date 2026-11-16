@@ -48,8 +48,8 @@ Guess before reading even if you know nothing: a wrong guess makes the lesson st
 | Mon | `d1-eval-harness` | is the new version better, or is it noise? | repeats, flakiness, slices, a paired bootstrap, a release gate | what is resampled |
 | Tue | `d2-judge-calibration` | can I trust an LLM judge? | Cohen's κ, weighted κ, position consistency | chance agreement |
 | Wed | `d3-eval-statistics` | which tool for which claim? | Wilson, McNemar, Holm, sample size, minimum detectable effect | which pairs count |
-| Thu | `d4-online-ab` | what do real users do? | SRM check, z-test, CUPED, a peeking simulation | one term of a formula |
-| Fri | `d5-offline-online` | does my offline metric predict anything? | rank correlations, sign agreement, a launch rule; then a timed design | how ties are ranked |
+| Thu | `d4-online-ab` | what do real users do? | SRM check, z-test, CUPED, a peeking simulation | one term of the CUPED formula |
+| Fri | `d5-offline-online` | does my offline metric predict anything? | rank correlations, sign agreement, a launch rule; then a timed design | a denominator |
 
 ## The idea of the week
 
@@ -309,6 +309,8 @@ Users differ a lot from each other, and that spread hides small effects. For eac
 y' = y − θ · (x − mean(x))
 ```
 
+The denominator of `θ` is the variance of **`x`**, the covariate. With the variance of `y` there, the adjustment is the wrong size and the variance is not minimised. That is today's review bug.
+
 The mean of `y'` equals the mean of `y`; its variance is multiplied by `1 − ρ²`, where `ρ` is the correlation between `x` and `y`. With `ρ = 0.7` the variance halves: the same power with half the users.
 
 ### 4. Peeking
@@ -357,7 +359,9 @@ Do the two measures **order** the model versions the same way?
 
 1 is the same order, −1 the opposite, 0 no relation. A pair tied on either measure counts as neither.
 
-**Spearman's ρ** replaces each value by its **rank** and takes the ordinary correlation of the ranks. Tied values share the **average** of the ranks they occupy: values `[10, 20, 20, 30]` get ranks `[1, 2.5, 2.5, 4]`. Giving ties the ranks 2 and 3 in the order they happen to appear makes the result depend on the order of the rows. That is today's review bug.
+The number of pairs is `n(n−1)/2`: each pair once. Dividing by `n(n−1)`, every ordered pair, halves every result, and a perfect agreement reads 0.5. That is today's review bug. Check any implementation on two identical lists: the answer must be exactly 1.
+
+**Spearman's ρ** replaces each value by its **rank** and takes the ordinary correlation of the ranks. Tied values share the **average** of the ranks they occupy: values `[10, 20, 20, 30]` get ranks `[1, 2.5, 2.5, 4]`. Giving ties the ranks 2 and 3 in the order they happen to appear makes the result depend on the order of the rows.
 
 Pearson correlation of `a` and `b`: centre both, then `Σ(a·b) / sqrt( Σa² · Σb² )`.
 
@@ -380,8 +384,8 @@ Written before the experiment, so that nobody argues afterwards. The inputs are 
 
 ### Traps of the day
 
-- Ties ranked by position.
-- Tied pairs counted as concordant.
+- Kendall's τ divided by the wrong number of pairs.
+- Ties ranked by position; tied pairs counted as concordant.
 - Zero deltas counted as agreement.
 - A launch rule that checks the main metric before the guardrails.
 

@@ -1,5 +1,8 @@
 # W3 D5: leases and fencing tokens
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-5-leases-and-fencing-tokens) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/03-distributed-systems.md` §5. Reference: Martin Kleppmann, "How to do distributed locking" (2016).
 
 ## The one idea

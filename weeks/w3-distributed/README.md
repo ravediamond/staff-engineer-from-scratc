@@ -45,9 +45,9 @@ Guess before reading even if you know nothing: a wrong guess makes the lesson st
 |---|---|---|---|---|
 | Mon | `d1-consistent-hashing` | which machine holds this key? | a hash ring with virtual nodes; rendezvous hashing | the end of the ring |
 | Tue | `d2-quorum` | how many copies must answer? | quorum reads and writes with read repair | which version wins |
-| Wed | `d3-clocks` | which event came first? | Lamport and vector clocks; sibling versions | one step of a clock update |
+| Wed | `d3-clocks` | which event came first? | Lamport and vector clocks; sibling versions | how two clocks are merged |
 | Thu | `d4-raft-log` | how do copies agree on one history? | Raft log replication and its commit rule | when an entry counts as committed |
-| Fri | `d5-leases-fencing` | who holds the lock, really? | a lease service and fenced storage | what the storage checks |
+| Fri | `d5-leases-fencing` | who holds the lock, really? | a lease service and fenced storage | what the storage remembers |
 
 ## Distributed systems in ten minutes
 
@@ -229,6 +229,8 @@ Each process keeps one counter **for every process**: a small dict.
 - On a local event: add 1 to your own entry.
 - On receive: for every entry take the larger of the two values, then add 1 to your own entry.
 
+The merge is **entry by entry**. Keeping whichever whole clock looks "bigger" throws away what the other one knew: `{A:3, B:0}` and `{A:0, B:2}` must merge to `{A:3, B:2}`, not to either of them. That is today's review bug.
+
 A vector clock summarises "everything I have heard of". Comparing two of them, entry by entry (a missing entry counts as 0):
 
 | Result | Condition | Meaning |
@@ -370,6 +372,8 @@ The lock service gives a **number** with every grant, and the number only ever i
 A acquires, token 33 ── pause ──────────────────────── write(token 33) → REJECTED: 33 < 34
 B acquires, token 34 ── write(token 34) → accepted, the storage now remembers 34
 ```
+
+A storage that does not remember the highest token it has seen cannot reject anything. That is today's review bug.
 
 Safety has moved. It no longer depends on the client knowing whether its lease is valid, which is impossible. It depends on the resource comparing two numbers, which is easy. The lock is only as safe as the check done by whatever it protects.
 

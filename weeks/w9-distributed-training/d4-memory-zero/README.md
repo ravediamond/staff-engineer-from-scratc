@@ -1,5 +1,8 @@
 # W9 D4: memory math and ZeRO
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-memory-arithmetic-and-zero) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/09-distributed-training.md` §4.
 Reference: Rajbhandari et al., "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models" (2020).
 

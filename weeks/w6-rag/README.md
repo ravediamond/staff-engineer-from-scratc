@@ -46,7 +46,7 @@ Guess before reading even if you know nothing: a wrong guess makes the lesson st
 | Day | Folder | The question | You build | The review bug is about |
 |---|---|---|---|---|
 | Mon | `d1-chunking` | what can the retriever ever find? | three chunkers that keep source offsets | a gap in the coverage |
-| Tue | `d2-hybrid-retrieval` | keywords or vectors? | both, fused | where ranks start |
+| Tue | `d2-hybrid-retrieval` | keywords or vectors? | both, fused | what the fusion is computed from |
 | Wed | `d3-metrics-rerank` | does retrieval work, and how sure are you? | recall, MRR, nDCG, a reranker, bootstrap intervals | what "ideal" is computed from |
 | Thu | `d4-freshness-cdc` | does the index follow the documents? | a versioned index fed by change events | what a late event may do |
 | Fri | `d5-acl-citations` | may this user see it, and is the answer supported? | access-filtered retrieval, a citation checker, abstention, a cost model; then a timed design | when the filter is applied |
@@ -152,7 +152,7 @@ RRF(d) = Σ over the lists that contain d of   1 / (k + rank of d in that list) 
 
 A document ranked first in both lists gets `2/61`; one ranked first in one list only gets `1/61`. The constant `k` flattens the difference between neighbouring ranks, so that no single list dominates. A document absent from a list contributes nothing for it.
 
-Ranks start at **1**. With ranks from 0, the first document's term is `1/60` instead of `1/61`: the order of close results changes, and the results no longer match anyone else's implementation. That is today's review bug.
+RRF is computed from **ranks**, never from scores. Feeding it the raw scores brings back exactly the problem it was built to avoid: the retriever with the larger numbers wins. That is today's review bug. And ranks start at **1**: the first document of a list contributes `1/61`.
 
 ### Score fusion
 
@@ -164,7 +164,7 @@ A real embedding model would be a large download. Today's vector is built by **f
 
 ### Traps of the day
 
-- Ranks from 0.
+- Scores used where ranks belong; ranks from 0.
 - Raw scores of the two retrievers added.
 - Ties left in arbitrary order: break them by document id.
 - The dense vectors not normalised (week 4).

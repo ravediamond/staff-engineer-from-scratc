@@ -1,5 +1,8 @@
 # W14 D5: LLM serving on Kubernetes + design #8
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-5-serving-an-llm-on-kubernetes-then-a-design) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/18-ml-platform-on-kubernetes.md` §4–6. Builds on W10 D4 (KV-cache sizing, continuous batching).
 
 ## The one idea

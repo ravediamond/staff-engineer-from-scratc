@@ -1,5 +1,8 @@
 # W5 D1: back-of-the-envelope estimation
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-1-back-of-the-envelope-estimation) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/05-design-method-and-estimation.md` §2 (numbers every engineer should know).
 
 ## The one idea

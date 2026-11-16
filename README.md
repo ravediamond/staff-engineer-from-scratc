@@ -16,6 +16,19 @@ in public. A loop is just the visible checkpoint.
 No GPU needed. Every lab runs on a Mac (CPU) in under 5 minutes. Weeks 8 and 9 use PyTorch
 (CPU, `gloo` backend for the distributed labs).
 
+## Start here
+
+1. Do the setup below (once).
+2. Open **[`weeks/w1-coding-base/README.md`](weeks/w1-coding-base/README.md)**. It is the full lesson for week 1 and tells you
+   what to open, in which order, every day. You need nothing outside that folder.
+3. Each following week works the same way: one folder, one `README.md` that holds everything for the week.
+   The list of weeks, in order, with what each one needs: [`weeks/README.md`](weeks/README.md).
+
+Everything else in this repo is optional depth or a separate short slot, and each week page says when to open it:
+`knowledge/` (interview questions, after the week), `drills/` (15 minutes, any day), `reading/` (20 minutes a week),
+`handson/` (real Kafka and Kubernetes, in weeks 13 and 14), `principal/` (the next level, after week 11),
+`private-template/` (the format of your private stories and case files, from week 11). You never have to go looking.
+
 ## Setup (once)
 
 ```bash
@@ -32,7 +45,7 @@ attempt before help, AI as a complement never a substitute, spaced retrieval, AI
 |---|---|---|---|
 | 0–5 | Retrieve | `scripts/review.py` | Spaced retrieval: answer due cards out loud before seeing the model answer. Mondays: 10-min delayed recall instead (`LEARNING.md` rule 3). |
 | 5–10 | Cold attempt | `predict.md` | Guess BEFORE reading anything. Wrong guesses help (pretesting effect). |
-| 10–18 | Read | `README.md` | One page. The concept and the staff angle, nothing more. |
+| 10–18 | Read | the week page, `weeks/<week>/README.md`, section of the day | The full lesson for the day: concepts from zero, examples, traps. (The day folder's own `README.md` is its one-page summary, with the staff angle.) |
 | 18–20 | Check | `predict_run.py` | `uv run python predict_run.py`. Every miss = something you did not understand: one line on why. |
 | 20–45 | Build | `wXdY_*.py` | Fill the `TODO`s. `uv run pytest <lab dir> -k "not review"` until green. AI off; debug alone 10 min before any hint. Narrate out loud (W1 D1). |
 | 45–53 | Review | `review_*.py` | Code that looks right and is wrong. Find the bug, fix it, write the `WHY:` line. `uv run pytest <lab dir> -k review`. |
@@ -78,9 +91,9 @@ Read it only after you graded yourself.
 - `SELF_AUDIT.md`: the no-blind-side checklist: answer each line out loud in two minutes
 - `handson/`: the same failures on real tools on your Mac (Kafka in Docker, Kubernetes with kind)
 - `scripts/review.py`: spaced retrieval over every `questions.md` you finish
-- `weeks/`: the labs (60 in Part 1, growing in Part 2)
+- `weeks/`: the course. One folder per week; each has a `README.md` with the full lesson for the week and one sub-folder per day with the lab (60 labs in Part 1, growing in Part 2). Index: `weeks/README.md`
 - `drills/`: 48 interview problems with tests, 4 per week
-- `knowledge/`: 19 dense primers with interview questions (the discussion rounds)
+- `knowledge/`: 19 dense primers with interview questions (the discussion rounds). Not needed to do the labs: read one after its week
 - `principal/`: the staff → principal playbook (what changes, how it is judged, exercises)
 - `reading/`: the weekly read-only slot
 - `private-template/`: the format of your private material (STAR bank, case files). Your real

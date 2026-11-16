@@ -1,5 +1,8 @@
 # W8 D3: reward-model calibration and length bias
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-3-calibration-and-length-bias) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/08-reward-models-and-preference-learning.md` §3.
 
 ## The one idea

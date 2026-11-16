@@ -78,7 +78,7 @@ and ownership tracked retention in the UNSW study.
 |---|---|
 | 0–5 | `review.py` (spaced retrieval). Mondays: the 10-minute delayed recall instead, starting at 0. |
 | 5–10 | Cold attempt: predict.md guesses before reading anything |
-| 10–18 | Read the README |
+| 10–18 | Read the lesson: the day's section of the week page (`weeks/<week>/README.md`) |
 | 18–20 | Run `predict_run.py`, write misses |
 | 20–45 | Build (AI off; 10-minute solo debugging before any hint) |
 | 45–53 | Review file (find the bug, write WHY) |

@@ -1,5 +1,8 @@
 # W11 D3: design docs that end debates
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-3-design-documents) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/12-staff-rubrics.md` §4.
 
 ## The one idea

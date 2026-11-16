@@ -43,8 +43,8 @@ Guess before reading even if you know nothing: a wrong guess makes the lesson st
 
 | Day | Folder | The failure | You build | The review bug is about |
 |---|---|---|---|---|
-| Mon | `d1-retries` | a call fails for a moment | retries with backoff, jitter, a deadline, a retry budget | what makes clients retry together |
-| Tue | `d2-circuit-breaker` | a dependency is down for minutes | a three-state circuit breaker | what happens after a failed trial |
+| Mon | `d1-retries` | a call fails for a moment | retries with backoff, jitter, a deadline, a retry budget | which errors get retried |
+| Tue | `d2-circuit-breaker` | a dependency is down for minutes | a three-state circuit breaker | how many trial calls are let through |
 | Wed | `d3-idempotency` | a request arrives twice | idempotency keys; a ledger that moves money exactly once | what is checked besides the key |
 | Thu | `d4-rate-limiting` | a client sends too much | token bucket, two sliding windows, a per-key limiter | a missing bound |
 | Fri | `d5-backpressure` | a consumer is slower than its producer | bounded concurrency and a bounded pipeline in asyncio | a queue with no limit |
@@ -80,7 +80,7 @@ A retry bets that the failure was transient. A badly made bet turns a small fail
 
 ### Rule 1: only retry what can succeed
 
-Retry: 429, 500, 502, 503, 504, timeouts, connection resets. Do not retry: 400, 401, 403, 404, 409, 422. The second call fails the same way and you have doubled the load. An operation that is not idempotent may be retried only with an idempotency key (Wednesday).
+Retry: 429, 500, 502, 503, 504, timeouts, connection resets. Do not retry: 400, 401, 403, 404, 409, 422. The second call fails the same way and you have doubled the load. Retrying everything is today's review bug. An operation that is not idempotent may be retried only with an idempotency key (Wednesday).
 
 ### Rule 2: exponential backoff with full jitter
 
@@ -166,6 +166,8 @@ The names come from electricity: a closed circuit lets current through.
 **The move from OPEN to HALF_OPEN is lazy.** There is no background timer. When someone asks `allow()` or reads the state, the breaker compares the clock with the moment it opened.
 
 **Before and after are separate calls.** `allow()` is asked before the call; `record_success()` or `record_failure()` is told after. Real calls overlap in time: several can be in flight between an `allow` and its `record`. That is why HALF_OPEN counts **in-flight** trials: each allowed trial takes a slot, and its result gives the slot back.
+
+The limit on trial calls is the point of HALF_OPEN: without it, the first moment after the pause sends full traffic to a service that is barely back, and knocks it over again. That is today's review bug.
 
 A failed trial must reopen the breaker and restart the timer. If the timer is not restarted, the breaker flips straight back to HALF_OPEN and the dependency is hit again at once.
 

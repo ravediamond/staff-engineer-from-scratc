@@ -1,5 +1,8 @@
 # W8 D5: DPO from scratch, process vs outcome rewards + Friday design
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-5-dpo-process-rewards-then-a-design) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/08-reward-models-and-preference-learning.md` §5–6.
 Reference: Rafailov et al., "Direct Preference Optimization" (2023); Lightman et al., "Let's Verify Step by Step" (2023).
 

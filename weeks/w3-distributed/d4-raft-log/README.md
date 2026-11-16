@@ -1,5 +1,8 @@
 # W3 D4: Raft log replication and the commit rule
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-raft-log-replication) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/03-distributed-systems.md` §4. Reading slot week 9: etcd's `raft/log.go`.
 
 ## The one idea

@@ -1,5 +1,8 @@
 # W15 D1: MVCC and isolation levels
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-1-mvcc-and-isolation-levels) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/19-databases.md` §1.
 
 ## The one idea

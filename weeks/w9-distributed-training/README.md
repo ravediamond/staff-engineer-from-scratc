@@ -48,8 +48,8 @@ Guess before reading even if you know nothing: a wrong guess makes the lesson st
 | Mon | `d1-collectives` | how do N workers share their gradients? | ring all-reduce, by hand | a chunk index |
 | Tue | `d2-ddp-gloo` | is my distributed run the same as one process? | data-parallel training on two real processes | a missing division |
 | Wed | `d3-exact-resume` | can I stop and continue as if nothing happened? | a checkpoint that restores everything | one piece of state |
-| Thu | `d4-memory-zero` | what fits on a GPU? | memory arithmetic; a ZeRO-1 optimiser step | which shard a rank updates |
-| Fri | `d5-sharded-checkpoints` | what if a node dies during a save? | sharded checkpoints with a manifest; resharding; efficiency metrics; then a timed design | the order of two writes |
+| Thu | `d4-memory-zero` | what fits on a GPU? | memory arithmetic; a ZeRO-1 optimiser step | how much state Adam keeps |
+| Fri | `d5-sharded-checkpoints` | what if a node dies during a save? | sharded checkpoints with a manifest; resharding; efficiency metrics; then a timed design | what a loader trusts |
 
 ## Distributed training in ten minutes
 
@@ -298,6 +298,8 @@ Mixed-precision training with Adam keeps, for each parameter:
 | Adam's second average `v`, 32-bit | 4 |
 | **total** | **16** |
 
+Adam is **two** states, `m` and `v`, 8 bytes together. Counting it as one gives 12 bytes per parameter and a plan that runs out of memory on the first step. That is today's review bug.
+
 So a model with `Ψ` parameters needs `16 Ψ` bytes of **model states**, before any activation. A 7-billion-parameter model: 112 GB. It does not fit on an 80 GB GPU, and plain data parallelism does not help, since every GPU holds a full copy.
 
 ### ZeRO: stop replicating
@@ -328,7 +330,7 @@ p ← p − lr · m̂ / ( sqrt(v̂) + ε )
 
 Every rank computes the full averaged gradient, but **updates only its own shard** of the parameters, using only **its own shard** of `m` and `v`; then the updated shards are gathered so that every rank has the full new parameter vector.
 
-The result must be **identical to ordinary Adam** on the full vector: each parameter is updated exactly once, by its owner, with the same numbers. That is today's test, and the week's theme again. A rank that updates the wrong slice, or the whole vector, breaks it. That is today's review bug.
+The result must be **identical to ordinary Adam** on the full vector: each parameter is updated exactly once, by its owner, with the same numbers. That is today's test, and the week's theme again. A rank that updates the wrong slice, or the whole vector, breaks it.
 
 ### Traps of the day
 
@@ -364,7 +366,7 @@ With sharded states (yesterday), no single process holds the whole model, so eac
 
 The manifest is the "commit" of the checkpoint. A save interrupted halfway leaves a directory with no manifest: the loader ignores it and falls back to the previous complete step.
 
-Write the manifest **first** and the meaning is lost: a manifest can then exist while shards are missing. That is today's review bug. The checksum check is the second line of defence: it also catches a shard damaged on disk.
+A manifest alone proves nothing. Written first, or left behind by a shard that was later lost, it can exist while shards are missing. The loader must check **every shard**, its presence and its checksum; trusting the manifest by itself is today's review bug. The checksum also catches a shard damaged on disk.
 
 ```python
 import hashlib
@@ -403,7 +405,7 @@ This week's deep dives: all-reduce cost, the exactness test, resume, the memory 
 ### Traps of the day
 
 - The manifest written before the shards.
-- A step trusted because its directory exists.
+- A step trusted because its directory, or its manifest, exists.
 - Shards concatenated in file-name order as text (`shard-10` before `shard-2`).
 - Steps sorted as text.
 

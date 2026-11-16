@@ -1,5 +1,8 @@
 # W10 D3: tracing, recording, deterministic replay
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-3-tracing-recording-replay) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/10-harness-engineering.md` §3.
 
 ## The one idea

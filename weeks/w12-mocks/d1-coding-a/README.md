@@ -1,5 +1,7 @@
 # W12 D1: coding mock A (35 minutes, 2 problems)
 
+> **Guide for this round:** [`../README.md`](../README.md#day-1-coding-mock-a) (the week page: how to run it, what is scored, where to repair afterwards).
+
 Do not read the build file before the timer starts. Narrate using the W1 D1 protocol.
 
 ## Problem A1: time-versioned key-value store (15 min target)

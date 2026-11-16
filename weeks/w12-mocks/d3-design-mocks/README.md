@@ -1,5 +1,7 @@
 # W12 D3: system design + ML design mocks (2 × 45 minutes)
 
+> **Guide for this round:** [`../README.md`](../README.md#day-3-design-mocks) (the week page: how to run it, what is scored, where to repair afterwards).
+
 Two full designs, back to back with a 15-minute break, like a real loop.
 
 1. `system_design.md`: a general system design round (feature store).

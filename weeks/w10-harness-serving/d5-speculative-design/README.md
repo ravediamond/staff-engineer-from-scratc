@@ -1,5 +1,8 @@
 # W10 D5: speculative decoding + Friday design + your own skill set
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-5-speculative-decoding-a-design-and-your-own-skill-set) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/11-llm-serving.md` §4. Reference: Leviathan et al. (2023), Chen et al. (2023).
 
 ## The one idea

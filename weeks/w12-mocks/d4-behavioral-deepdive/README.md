@@ -1,5 +1,7 @@
 # W12 D4: behavioral + project deep dive (2 × 45 minutes)
 
+> **Guide for this round:** [`../README.md`](../README.md#day-4-behavioral-and-project-deep-dive) (the week page: how to run it, what is scored, where to repair afterwards).
+
 ## Part 1: behavioral (45 min)
 Have someone read `script.md` to you (or record the questions and play them back). 6 questions,
 ~6 minutes each including follow-ups. Answer from your STAR bank (W11 D5), out loud, recorded.

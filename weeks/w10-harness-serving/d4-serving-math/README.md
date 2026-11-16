@@ -1,5 +1,8 @@
 # W10 D4: serving math: KV cache, batching, paged memory
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-serving-arithmetic) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/11-llm-serving.md` §1–3.
 
 ## The one idea

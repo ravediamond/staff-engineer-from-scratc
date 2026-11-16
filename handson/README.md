@@ -1,5 +1,7 @@
 # Hands-on: the real tools, on your Mac
 
+**When:** `kafka/` after the Wednesday lab of [week 13](../weeks/w13-streaming/README.md); `k8s/` after the Wednesday and Thursday labs of [week 14](../weeks/w14-kubernetes/README.md). The week pages teach the concepts; this folder is the same behaviour on the real tools.
+
 The labs simulate the mechanism. This folder makes you break the real thing the same way, so that in
 an interview you speak from having typed the commands.
 

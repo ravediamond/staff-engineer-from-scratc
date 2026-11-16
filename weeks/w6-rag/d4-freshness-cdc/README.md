@@ -1,5 +1,8 @@
 # W6 D4: freshness: versioned index, CDC, out-of-order events
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-freshness-versions-out-of-order-events) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/06-rag.md` §4. Builds on W4 D5 (exactly-once consumer).
 
 ## The one idea

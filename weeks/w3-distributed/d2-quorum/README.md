@@ -1,5 +1,8 @@
 # W3 D2: quorum replication, read repair
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-2-quorum-replication-read-repair) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/03-distributed-systems.md` §2.
 
 ## The one idea

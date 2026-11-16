@@ -1,5 +1,8 @@
 # W14 D4: GPU scheduling: gangs, quotas, claims, checkpoint interval
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-gpu-scheduling) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/18-ml-platform-on-kubernetes.md` §1–3.
 
 ## The one idea

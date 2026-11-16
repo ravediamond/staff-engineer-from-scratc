@@ -1,5 +1,7 @@
 # W12 D2: coding mock B (35 minutes, 2 problems)
 
+> **Guide for this round:** [`../README.md`](../README.md#day-2-coding-mock-b) (the week page: how to run it, what is scored, where to repair afterwards).
+
 ## Problem B1: heavy hitters in a stream (15 min target)
 
 Implement **Misra–Gries** with k counters: after the stream, every item with frequency > n/(k+1) is

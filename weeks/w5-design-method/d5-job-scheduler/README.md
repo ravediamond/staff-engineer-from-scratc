@@ -1,5 +1,8 @@
 # W5 D5: job scheduler (leases, retries, DLQ) + Friday design
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-5-job-scheduler-then-the-first-timed-design) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/05-design-method-and-estimation.md` §6.
 
 ## The one idea

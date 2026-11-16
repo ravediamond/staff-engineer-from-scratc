@@ -45,11 +45,11 @@ Guess before reading even if you know nothing: a wrong guess makes the lesson st
 
 | Day | Folder | The question | You build | The review bug is about |
 |---|---|---|---|---|
-| Mon | `d1-agent-loop` | what makes an agent reliable? | a schema validator and the agent loop with budgets | a type check |
+| Mon | `d1-agent-loop` | what makes an agent reliable? | a schema validator and the agent loop with budgets | where the step limit is checked |
 | Tue | `d2-sandbox` | what may an agent touch? | path containment, a command policy, bounded execution | how "inside" is tested |
 | Wed | `d3-tracing-replay` | how do you debug and test an agent? | spans, recording, deterministic replay, trace diff | what replay verifies |
-| Thu | `d4-serving-math` | how many users fit on a GPU? | KV-cache arithmetic, a batching simulator, paged memory | when new requests are admitted |
-| Fri | `d5-speculative-design` | how do you generate faster without changing the output? | speculative decoding; then a timed design; then your own skill set | which distribution is sampled on a rejection |
+| Thu | `d4-serving-math` | how many users fit on a GPU? | KV-cache arithmetic, a batching simulator, paged memory | a factor in the memory formula |
+| Fri | `d5-speculative-design` | how do you generate faster without changing the output? | speculative decoding; then a timed design; then your own skill set | the acceptance ratio |
 
 ## The two layers in five minutes
 
@@ -107,7 +107,7 @@ schema = {"type": "object",
 
 A validator is a recursive function: check the node, then go into the properties of an object or the items of an array, extending a **path** (`$`, `$.path`, `$.files[2]`) so that each message says where the problem is. It returns the **list** of all errors; an empty list means valid.
 
-One Python trap: `isinstance(True, int)` is `True`. A boolean must not pass as an integer or a number. Test for `bool` first. That is today's review bug.
+One Python trap: `isinstance(True, int)` is `True`. A boolean must not pass as an integer or a number. Test for `bool` first.
 
 ```python
 isinstance(True, int), type(True) is int        # (True, False)
@@ -115,7 +115,9 @@ isinstance(True, int), type(True) is int        # (True, False)
 
 ### Budgets
 
-A loop driven by a model can run forever, or until the bill arrives. Two hard limits: a maximum number of steps and a maximum number of tokens. When either is reached the run **stops with an explicit status** (`"max_steps"`, `"budget"`). The caller must be able to tell "finished" from "ran out"; a run that hits a limit and returns its last text as if it were an answer is a silent failure.
+A loop driven by a model can run forever, or until the bill arrives. Two hard limits: a maximum number of steps and a maximum number of tokens. When either is reached the run **stops with an explicit status** (`"max_steps"`, `"budget"`). The limit is checked **before** asking the model for another action. Checked after, the loop makes one call more than allowed: on a tool that sends an email or spends money, that extra call is the bug report. It is today's review bug.
+
+The caller must be able to tell "finished" from "ran out"; a run that hits a limit and returns its last text as if it were an answer is a silent failure.
 
 ### The trace
 
@@ -289,6 +291,8 @@ A model is a stack of **layers**. To produce a token it looks at all the previou
 KV bytes = 2 (key and value) × layers × KV heads × head dimension × tokens × sequences × bytes per number
 ```
 
+The leading 2 is easy to drop: a key **and** a value are stored for every token. Without it every capacity plan is off by half. That is today's review bug.
+
 For an 8-billion-parameter model of the Llama-3 family (32 layers, 8 KV heads, head dimension 128, 2 bytes per number): `2 × 32 × 8 × 128 × 2 = 131 072` bytes, **128 KB per token**. A context of 32 000 tokens is about 4 GB **for one sequence**.
 
 So the number of users a GPU can serve at once is set by memory:
@@ -306,7 +310,7 @@ Producing one token for 1 sequence or for 64 takes almost the same time: at each
 - **Static batching**: form a batch, run it until **every** sequence in it has finished, then form the next. A request for 10 tokens waits for the one that wants 2 000, and new arrivals wait for the whole batch.
 - **Continuous batching** (the method of vLLM): at **every step**, sequences that have finished leave and waiting requests take the free slots.
 
-Today's simulator advances step by step: each running sequence emits one token per step, and you measure when each request finishes under both policies. Admitting new requests only when the batch is empty, in the mode that is supposed to be continuous, is today's review bug.
+Today's simulator advances step by step: each running sequence emits one token per step, and you measure when each request finishes under both policies. A "continuous" mode that admits new requests only when the batch is empty is static batching under another name.
 
 ### Paged KV memory
 
@@ -365,7 +369,7 @@ if all k are accepted:   draw one more token from the target's next distribution
 
 A tiny case: two tokens, target `p = (0.7, 0.3)`, draft `q = (0.4, 0.6)`. Token A is drafted 40% of the time and always accepted: 0.40. Token B is drafted 60% of the time and accepted with probability 0.5: 0.30. The remaining 0.30 are rejections, and the residual is `(0.3, 0) → (1, 0)`: always A. Total: A = 0.70, B = 0.30. Exactly `p`.
 
-On a rejection, the replacement comes from the **residual**, not from `p`. Sampling from `p` there counts the target's preference twice and the output is no longer the target's distribution. That is today's review bug. The test checks it the only way possible: the distribution of the first emitted token over 20 000 trials must match `p`.
+The ratio is **target over draft**, `p / q`. Inverted, the rule accepts what the draft likes and the target does not, and the output drifts toward the draft model. That is today's review bug. And on a rejection the replacement comes from the **residual**, not from `p`. The test checks all of it the only way possible: the distribution of the first emitted token over 20 000 trials must match `p`.
 
 ```python
 import random
@@ -406,7 +410,7 @@ Add the link to `SHIPLOG.md`. The day's own `README.md` has the same list.
 
 ### Traps of the day
 
-- A replacement drawn from `p`.
+- The ratio inverted; a replacement drawn from `p`.
 - Continuing after a rejection.
 - No bonus token when everything was accepted.
 - A division by zero when `q(x) = 0` or `α = 1`.

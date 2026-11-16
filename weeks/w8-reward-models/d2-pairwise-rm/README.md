@@ -1,5 +1,8 @@
 # W8 D2: training a pairwise reward model
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-2-training-a-pairwise-reward-model) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/08-reward-models-and-preference-learning.md` §2.
 
 ## The one idea

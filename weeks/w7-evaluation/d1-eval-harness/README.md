@@ -1,5 +1,8 @@
 # W7 D1: eval harness, flakiness, slices, regression gates
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-1-the-eval-harness) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/07-evaluation-and-experimentation.md` §1–2.
 
 ## The one idea

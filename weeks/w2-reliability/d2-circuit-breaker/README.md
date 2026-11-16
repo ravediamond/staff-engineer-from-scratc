@@ -1,5 +1,8 @@
 # W2 D2: circuit breaker
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-2-circuit-breaker) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/02-concurrency-and-reliability.md` §3.
 
 ## The one idea

@@ -1,5 +1,8 @@
 # W11 D2: prove it works (property-based testing with shrinking)
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-2-prove-it-works) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/12-staff-rubrics.md` §3 ("Prove it works"). Reference: QuickCheck (Claessen & Hughes, 2000), Hypothesis.
 
 ## The one idea

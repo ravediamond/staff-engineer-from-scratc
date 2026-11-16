@@ -1,5 +1,8 @@
 # W4 D3: inverted index and BM25
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-3-inverted-index-and-bm25) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/04-storage-and-retrieval.md` §3. Used again in W6 D2 (hybrid retrieval).
 
 ## The one idea

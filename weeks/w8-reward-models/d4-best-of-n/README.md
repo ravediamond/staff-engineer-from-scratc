@@ -1,5 +1,8 @@
 # W8 D4: best-of-N and reward over-optimisation
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-4-best-of-n-and-over-optimisation) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/08-reward-models-and-preference-learning.md` §4.
 Reference: Gao, Schulman, Hilton, "Scaling Laws for Reward Model Overoptimization" (2022).
 

@@ -1,5 +1,8 @@
 # W14 D3: autoscaling, rolling updates, disruption budgets
 
+> **Full lesson for this day:** [`../README.md`](../README.md#day-3-autoscaling-rolling-updates-disruption-budgets) (the week page: concepts from zero, examples, traps).
+> This file is the one-page summary with the staff angle. Order of work: `predict.md` → the lesson → `predict_run.py` → the exercise → the review file → `questions.md`.
+
 Primer: `knowledge/17-kubernetes.md` §5–6.
 
 ## The one idea
